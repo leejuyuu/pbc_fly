@@ -27,6 +27,38 @@ class Plane(pygame.sprite.Sprite):
         super().__init__()
         self.image, self.rect = load_image('plane.png')
 
+        self.screen = pygame.display.get_surface()
+        self.area = self.screen.get_rect()
+        # Put the rect at the bottom of the screen
+        self.rect.midbottom = (self.screen.get_width() // 2, self.area.bottom - self.screen.get_height() * 0.05)
+        self.radius = max(self.rect.width, self.rect.height)
+        self.alive = True
+        self.vert = 0
+        self.horiz = 0
+        self.speed = 1
+
+    def key_pressed(self):
+        keys_pressed = pygame.key.get_pressed()
+        self.vert = 0
+        self.horiz = 0
+        if keys_pressed[pygame.K_LEFT]:
+            self.horiz = -2 * self.speed
+        if keys_pressed[pygame.K_RIGHT]:
+            self.horiz = 2 * self.speed
+
+    def move(self, diff: int):
+        self.horiz = diff
+
+    def update(self):
+        new_rect = self.rect.move((self.horiz, self.vert))
+
+        if not self.area.contains(new_rect):
+            if new_rect.left < self.area.left:
+                new_rect.left = self.area.left
+            elif new_rect.right > self.area.right:
+                new_rect.right = self.area.right
+        self.rect = new_rect
+
 
 
 
@@ -53,6 +85,8 @@ def main():
                 return
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 return
+
+        plane.key_pressed()
 
         allsprites.update()
 
