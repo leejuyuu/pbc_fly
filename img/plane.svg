@@ -7,13 +7,16 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   inkscape:export-ydpi="600"
+   inkscape:export-xdpi="600"
+   inkscape:export-filename="/home/tzu-yu/git_repos/pbc_fly/img/plane.png"
    sodipodi:docname="plane.svg"
    inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
    id="svg839"
    version="1.1"
-   viewBox="0 0 5.9304256 2.9652202"
-   height="2.9652202mm"
-   width="5.9304256mm">
+   viewBox="0 0 5.2916669 2.6458399"
+   height="2.6458399mm"
+   width="5.291667mm">
   <defs
      id="defs833" />
   <sodipodi:namedview
@@ -22,13 +25,13 @@
      inkscape:window-x="0"
      inkscape:window-height="994"
      inkscape:window-width="1920"
-     showgrid="true"
+     showgrid="false"
      inkscape:document-rotation="0"
      inkscape:current-layer="layer1"
      inkscape:document-units="mm"
-     inkscape:cy="4.5276812"
-     inkscape:cx="9.6266573"
-     inkscape:zoom="7.9195959"
+     inkscape:cy="6.0313748"
+     inkscape:cx="7.58063"
+     inkscape:zoom="44.8"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
      borderopacity="1.0"
@@ -36,8 +39,8 @@
      pagecolor="#ffffff"
      id="base">
     <inkscape:grid
-       originy="-191.63582"
-       originx="-43.336869"
+       originy="-191.82291"
+       originx="-43.656246"
        id="grid1402"
        type="xygrid" />
   </sodipodi:namedview>
@@ -54,13 +57,19 @@
     </rdf:RDF>
   </metadata>
   <g
-     transform="translate(-43.33687,-191.63582)"
+     transform="translate(-43.656249,-191.82291)"
      id="layer1"
      inkscape:groupmode="layer"
      inkscape:label="Layer 1">
     <path
+       sodipodi:nodetypes="ccccc"
+       d="m 43.656249,191.82291 h 5.291667 v 2.64584 h -5.291667 z"
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.264999"
+       id="rect1424" />
+    <path
+       sodipodi:nodetypes="cccc"
        id="path1404"
        d="m 43.656249,194.46875 2.645834,-2.64584 2.645833,2.64584 z"
-       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+       style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
   </g>
 </svg>
