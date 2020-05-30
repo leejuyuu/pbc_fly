@@ -62,12 +62,12 @@ def main():
             # elif event.type == MOUSEBUTTONUP:
             #     fist.unpunch()
 
-            allsprites.update()
+        allsprites.update()
 
-            # Draw Everything
-            screen.blit(background, (0, 0))
-            allsprites.draw(screen)
-            pygame.display.flip()
+        # Draw Everything
+        screen.blit(background, (0, 0))
+        allsprites.draw(screen)
+        pygame.display.flip()
     pygame.quit()
 
 if __name__ == '__main__':
