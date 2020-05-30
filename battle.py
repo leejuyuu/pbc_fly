@@ -53,14 +53,6 @@ def main():
                 return
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 return
-            # elif event.type == MOUSEBUTTONDOWN:
-            #     if fist.punch(chimp):
-            #         punch_sound.play()  # punch
-            #         chimp.punched()
-            #     else:
-            #         whiff_sound.play()  # miss
-            # elif event.type == MOUSEBUTTONUP:
-            #     fist.unpunch()
 
         allsprites.update()
 
