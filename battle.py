@@ -2,6 +2,7 @@
 This module handles all battle mechanisms.
 """
 from pathlib import Path
+from typing import Tuple
 import pygame
 
 IMG_DIR = Path(__file__).resolve().parent / 'img'
@@ -61,7 +62,33 @@ class Plane(pygame.sprite.Sprite):
 
 
 
+class Missile(pygame.sprite.Sprite):
+    pool = pygame.sprite.Group()
+    active = pygame.sprite.Group()
 
+    def __init__(self):
+        super().__init__()
+        self.image, self.rect = load_image('bullet.png')
+        screen = pygame.display.get_surface()
+        self.area = screen.get_rect()
+        self.speed = 10
+
+    @classmethod
+    def position(cls, location: Tuple[int, int]):
+        if len(cls.pool) > 0:
+            missile = cls.pool.sprites()[0]
+            missile.add(cls.allsprites, cls.active)
+            missile.remove(cls.pool)
+            missile.rect.midbottom = location
+
+    def recycle(self):
+        self.add(self.pool)
+        self.remove(self.allsprites, self.active)
+
+    def update(self):
+        self.rect = self.rect.move(0, -1 * self.speed)
+        if self.rect.top < self.area.top:
+            self.recycle()
 
 def main():
     pygame.init()
@@ -75,9 +102,15 @@ def main():
 
     plane = Plane()
     allsprites = pygame.sprite.RenderPlain((plane))
+    # Create 10 missiles and store them in the class variable pool
+    Missile.pool = pygame.sprite.Group([Missile() for _ in range(10)])
+    Missile.allsprites = allsprites
+    fire_period = 20
     clock = pygame.time.Clock()
 
+    frame = 0
     while True:
+        frame += 1
         clock.tick(60)
 
         for event in pygame.event.get():
@@ -87,6 +120,8 @@ def main():
                 return
 
         plane.key_pressed()
+        if not frame % fire_period:
+            Missile.position(plane.rect.midtop)
 
         allsprites.update()
 
