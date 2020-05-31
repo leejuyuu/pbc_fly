@@ -2,9 +2,13 @@
 This module handles all battle mechanisms.
 """
 from pathlib import Path
+import random
 from typing import Tuple
 import pygame
 
+INITIAL_HP = 100
+HP_INCREMENT = 10
+HP_PACK_PROB = 0.001
 IMG_DIR = Path(__file__).resolve().parent / 'img'
 print(__file__)
 print(IMG_DIR)
@@ -37,6 +41,7 @@ class Plane(pygame.sprite.Sprite):
         self.vert = 0
         self.horiz = 0
         self.speed = 1
+        self.hp = INITIAL_HP
 
     def key_pressed(self):
         keys_pressed = pygame.key.get_pressed()
@@ -60,6 +65,8 @@ class Plane(pygame.sprite.Sprite):
                 new_rect.right = self.area.right
         self.rect = new_rect
 
+        if self.hp > INITIAL_HP:
+            self.hp = INITIAL_HP
 
 
 class Missile(pygame.sprite.Sprite):
@@ -90,6 +97,29 @@ class Missile(pygame.sprite.Sprite):
         if self.rect.top < self.area.top:
             self.recycle()
 
+class HpPack(pygame.sprite.Sprite):
+    allsprites = None
+    def __init__(self):
+        super().__init__()
+        self.image, self.rect = load_image('hp_pack.png')
+        screen = pygame.display.get_surface()
+        self.area = screen.get_rect()
+        self.speed = 1
+
+    def appear(self, position: int = None):
+        self.rect.top = self.area.top
+        if position is None:
+            self.rect.left = random.randrange(self.area.width - 2 * self.rect.width)
+        else:
+            self.rect.x = position
+        self.add(self.allsprites)
+
+    def update(self):
+        self.rect = self.rect.move(0, 1 * self.speed)
+        if self.rect.bottom > self.area.bottom:
+            self.kill()
+
+
 def main():
     pygame.init()
     screen = pygame.display.set_mode((480, 640))
@@ -105,6 +135,8 @@ def main():
     # Create 10 missiles and store them in the class variable pool
     Missile.pool = pygame.sprite.Group([Missile() for _ in range(10)])
     Missile.allsprites = allsprites
+    HpPack.allsprites = allsprites
+    hp_pack = HpPack()
     fire_period = 20
     clock = pygame.time.Clock()
 
@@ -122,6 +154,15 @@ def main():
         plane.key_pressed()
         if not frame % fire_period:
             Missile.position(plane.rect.midtop)
+        if hp_pack not in allsprites:
+            if random.random() <= HP_PACK_PROB:
+                hp_pack.appear()
+
+        allsprites.update()
+
+        if hp_pack in allsprites and pygame.sprite.collide_rect(plane, hp_pack):
+            plane.hp += HP_INCREMENT
+            hp_pack.kill()
 
         allsprites.update()
 
