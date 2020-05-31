@@ -97,11 +97,11 @@ class Missile(pygame.sprite.Sprite):
         if self.rect.top < self.area.top:
             self.recycle()
 
-class HpPack(pygame.sprite.Sprite):
+
+class FallingItem(pygame.sprite.Sprite):
     allsprites = None
     def __init__(self):
         super().__init__()
-        self.image, self.rect = load_image('hp_pack.png')
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()
         self.speed = 1
@@ -119,6 +119,11 @@ class HpPack(pygame.sprite.Sprite):
         if self.rect.bottom > self.area.bottom:
             self.kill()
 
+class HpPack(FallingItem):
+    def __init__(self):
+        super().__init__()
+        self.image, self.rect = load_image('hp_pack.png')
+
 
 def main():
     pygame.init()
@@ -135,7 +140,7 @@ def main():
     # Create 10 missiles and store them in the class variable pool
     Missile.pool = pygame.sprite.Group([Missile() for _ in range(10)])
     Missile.allsprites = allsprites
-    HpPack.allsprites = allsprites
+    FallingItem.allsprites = allsprites
     hp_pack = HpPack()
     fire_period = 20
     clock = pygame.time.Clock()
