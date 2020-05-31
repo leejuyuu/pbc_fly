@@ -9,6 +9,7 @@ import pygame
 INITIAL_HP = 100
 HP_INCREMENT = 10
 HP_PACK_PROB = 0.001
+POWER_UP_PROB = 0.001
 IMG_DIR = Path(__file__).resolve().parent / 'img'
 print(__file__)
 print(IMG_DIR)
@@ -81,12 +82,16 @@ class Missile(pygame.sprite.Sprite):
         self.speed = 10
 
     @classmethod
-    def position(cls, location: Tuple[int, int]):
-        if len(cls.pool) > 0:
+    def position(cls, location: Tuple[int, int], num: int = 1):
+        if len(cls.pool) < num:
+            cls.pool.add([Missile() for _ in range(num)])
+        x_all = ((-(num-1)/2 + i)*50 for i in range(num))
+        for x in x_all:
             missile = cls.pool.sprites()[0]
             missile.add(cls.allsprites, cls.active)
             missile.remove(cls.pool)
-            missile.rect.midbottom = location
+            missile.rect.bottom = location[1]
+            missile.rect.x = x + location[0]
 
     def recycle(self):
         self.add(self.pool)
@@ -119,6 +124,12 @@ class FallingItem(pygame.sprite.Sprite):
         if self.rect.bottom > self.area.bottom:
             self.kill()
 
+class PowerUp(FallingItem):
+    def __init__(self):
+        super().__init__()
+        self.image, self.rect = load_image('powerup.png')
+
+
 class HpPack(FallingItem):
     def __init__(self):
         super().__init__()
@@ -142,9 +153,11 @@ def main():
     Missile.allsprites = allsprites
     FallingItem.allsprites = allsprites
     hp_pack = HpPack()
+    powerup = PowerUp()
     fire_period = 20
     clock = pygame.time.Clock()
 
+    n_missile = 1
     frame = 0
     while True:
         frame += 1
@@ -158,12 +171,20 @@ def main():
 
         plane.key_pressed()
         if not frame % fire_period:
-            Missile.position(plane.rect.midtop)
+            Missile.position(plane.rect.midtop, n_missile)
+
+        if powerup not in allsprites and random.random() <= POWER_UP_PROB:
+            powerup.appear()
+
         if hp_pack not in allsprites:
             if random.random() <= HP_PACK_PROB:
                 hp_pack.appear()
 
         allsprites.update()
+
+        if powerup in allsprites and pygame.sprite.collide_rect(plane, powerup):
+            n_missile += 1
+            powerup.kill()
 
         if hp_pack in allsprites and pygame.sprite.collide_rect(plane, hp_pack):
             plane.hp += HP_INCREMENT
