@@ -11,15 +11,14 @@ HP_INCREMENT = 10
 HP_PACK_PROB = 0.001
 POWER_UP_PROB = 0.001
 IMG_DIR = Path(__file__).resolve().parent / 'img'
-print(__file__)
-print(IMG_DIR)
+
 # functions to create our resources
 def load_image(name, colorkey=None):
-    fullname = IMG_DIR / name
+    path = IMG_DIR / name
     try:
-        image = pygame.image.load(str(fullname))
+        image = pygame.image.load(str(path))
     except pygame.error:
-        print("Cannot load image:", fullname)
+        print("Cannot load image:", path)
         raise SystemExit(str(pygame.compat.geterror()))
     image = image.convert()
     if colorkey is not None:
@@ -33,12 +32,12 @@ class Plane(pygame.sprite.Sprite):
         super().__init__()
         self.image, self.rect = load_image('plane.png')
 
-        self.screen = pygame.display.get_surface()
-        self.area = self.screen.get_rect()
-        # Put the rect at the bottom of the screen
-        self.rect.midbottom = (self.screen.get_width() // 2, self.area.bottom - self.screen.get_height() * 0.05)
+        screen = pygame.display.get_surface()
+        self.area = screen.get_rect()
+        # Put the rect at the bottom center of the screen
+        self.rect.centerx = self.area.width // 2
+        self.rect.bottom = self.area.height * 0.95
         self.radius = max(self.rect.width, self.rect.height)
-        self.alive = True
         self.vert = 0
         self.horiz = 0
         self.speed = 1
@@ -52,9 +51,6 @@ class Plane(pygame.sprite.Sprite):
             self.horiz = -2 * self.speed
         if keys_pressed[pygame.K_RIGHT]:
             self.horiz = 2 * self.speed
-
-    def move(self, diff: int):
-        self.horiz = diff
 
     def update(self):
         new_rect = self.rect.move((self.horiz, self.vert))
