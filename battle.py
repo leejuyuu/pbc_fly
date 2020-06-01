@@ -35,8 +35,8 @@ class Plane(pygame.sprite.Sprite):
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()
         # Put the rect at the bottom center of the screen
-        self.rect.centerx = self.area.width // 2
-        self.rect.bottom = self.area.height * 0.95
+        self.rect.centerx = int(self.area.width // 2)
+        self.rect.bottom = int(self.area.height * 0.95)
         self.radius = max(self.rect.width, self.rect.height)
         self.vert = 0
         self.horiz = 0
