@@ -87,7 +87,7 @@ class Missile(pygame.sprite.Sprite):
             missile.add(cls.allsprites, cls.active)
             missile.remove(cls.pool)
             missile.rect.bottom = location[1]
-            missile.rect.x = x + location[0]
+            missile.rect.x = int(x + location[0])
 
     def recycle(self):
         self.add(self.pool)
