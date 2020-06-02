@@ -16,6 +16,29 @@ class Enemy(pygame.sprite.Sprite):
 	def update(self):
 		self.rect.y += self.speed 
 
+
+class FallingItem(pygame.sprite.Sprite):
+    allsprites = None
+    def __init__(self):
+        super().__init__()
+        screen = pygame.display.get_surface()
+        self.area = screen.get_rect()
+        self.speed = 1
+
+    def appear(self, position: int = None):
+        self.rect.top = self.area.top
+        if position is None:
+            self.rect.left = random.randrange(self.area.width - 2 * self.rect.width)
+        else:
+            self.rect.x = position
+        self.add(self.allsprites)
+
+    def update(self):
+        self.rect = self.rect.move(0, 1 * self.speed)
+        if self.rect.bottom > self.area.bottom:
+            self.kill()
+
+
 from src.enemy import enemy
 from enemy import *
 
