@@ -138,9 +138,11 @@ def main():
     pygame.display.set_caption('pbc fly')
     pygame.mouse.set_visible(0)
 
-    background = pygame.Surface(screen.get_size())
+    background, background_size = load_image('skybackground.jpg')
+    background = pygame.transform.scale(background, (480, 640))
     background = background.convert()
-    background.fill((250, 250, 250))
+    background1_rect = pygame.Rect(0, 0, 480, 640)
+    background2_rect = pygame.Rect(0, 0, 480, 640)
 
     plane = Plane()
     allsprites = pygame.sprite.RenderPlain((plane))
@@ -164,6 +166,11 @@ def main():
                 return
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 return
+
+        background1_rect.y += 1
+        if background2_rect.y + background1_rect.y > 640 :
+            background1_rect.y = 0
+        background2_rect.bottom = background1_rect.y
 
         plane.key_pressed()
         if not frame % fire_period:
@@ -189,7 +196,8 @@ def main():
         allsprites.update()
 
         # Draw Everything
-        screen.blit(background, (0, 0))
+        screen.blit(background, (0, background1_rect.y))
+        screen.blit(background, (0, background2_rect.y))
         allsprites.draw(screen)
         pygame.display.flip()
     pygame.quit()
