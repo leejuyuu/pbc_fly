@@ -39,7 +39,7 @@ class FallingItem(pygame.sprite.Sprite):
             self.kill()
 
 
-from src.enemy import enemy
+from pbc_fly.enemy import enemy
 from enemy import *
 
 pygame.init()
@@ -50,6 +50,30 @@ for i in range(60):
 	enemy = Enemy((random.randrange(0, WIDTH), random.randrange(0,50)))
 	enemy_sprites.add(enemy)
 	all_sprites.add(enemy)
+
+# 子彈擊毀敵艦
+bullet_collide_dic = pygame.sprite.groupcollide(bullet_sprites, enemy_sprites, True, True)
+for bullet in bullet_collide_dic:
+    print(bullet, bullet_collide_dic)
+
+
+# 遊戲結束的情形（敵艦撞機）
+self.rect.x = self.bg_size[0]/2
+self.rect.y = self.bg_size[-1]
+self.rect.height
+
+if pygame.sprite.spritecollideany(plane, enemy_sprites) is not None:
+    print('killed')
+    running = False
+
+# 批量化出現敵艦
+init_enemy(ENEMY_SIZE)
+
+# 增加敵艦
+if len(enemy_sprites) <= ENEMY_MIN_SIZE:
+    init_enemy(ENEMY_SIZE - len(enemy_sprites))
+
+
 
 pygame.display.update()
 
