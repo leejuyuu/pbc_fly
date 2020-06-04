@@ -144,7 +144,8 @@ def main():
     background1_rect = pygame.Rect(0, 0, 480, 640)
     background2_rect = pygame.Rect(0, 0, 480, 640)
 
-    bloodH = 15
+    barW = 160
+    barH = 15
     bloodx = 5
     bloody = 620
 
