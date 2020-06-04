@@ -227,7 +227,7 @@ def main():
             new_enemy = enemy.Enemy()
             new_enemy.add(allsprites, enemies)
             
-        if not frame % 10:
+        if not frame % fire_period:
             for a_enemy in enemies:  
                 print(123)
                 print(len(enemy.Enemy_Missile.pool))
