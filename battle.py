@@ -7,6 +7,7 @@ from typing import Tuple
 import pygame
 import enemy
 
+
 INITIAL_HP = 160
 HP_INCREMENT = 10
 HP_PACK_PROB = 0.001
@@ -180,6 +181,11 @@ def main():
     Missile.pool = pygame.sprite.Group([Missile() for _ in range(10)])
     Missile.allsprites = allsprites
     FallingItem.allsprites = allsprites
+
+    enemy.Enemy_Missile.pool = pygame.sprite.Group([enemy.Enemy_Missile() for _ in range(10)])
+    enemy.Enemy_Missile.allsprites = allsprites
+    enemies = pygame.sprite.Group()
+
     hp_pack = HpPack()
     powerup = PowerUp()
     fire_period = 20
@@ -215,9 +221,22 @@ def main():
                 hp_pack.appear()
 
 
+
+
+        if not frame % 100:
+            new_enemy = enemy.Enemy(0)
+            new_enemy.add(allsprites, enemies)
+            
         if not frame % 10:
-            allsprites.add(enemy.Enemy(0))
+            for a_enemy in enemies:  
+                print(123)
+                print(len(enemy.Enemy_Missile.pool))
+                print(a_enemy.rect.midbottom)
+                enemy.Enemy_Missile.position(a_enemy.rect.midbottom, 1)
         allsprites.update()
+
+
+
 
         if powerup in allsprites and pygame.sprite.collide_rect(plane, powerup):
             if n_missile < 3:

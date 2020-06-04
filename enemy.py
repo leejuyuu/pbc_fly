@@ -2,6 +2,7 @@
 敵人機制
 """
 import pygame 
+from typing import Tuple
 import battle
 import random
 
@@ -27,6 +28,40 @@ class Enemy(pygame.sprite.Sprite):
         self.rect = self.rect.move(0, 1 * self.speed)
         if self.rect.bottom > self.area.bottom:
             self.kill()
+
+
+class Enemy_Missile(pygame.sprite.Sprite):
+    pool = pygame.sprite.Group()
+    active = pygame.sprite.Group()
+
+    def __init__(self):
+        super().__init__()
+        self.image, self.rect = battle.load_image('bullet.png', colorkey=-1, scale=(5, 20))
+        screen = pygame.display.get_surface()
+        self.area = screen.get_rect()
+        self.speed = 1
+
+    @classmethod
+    def position(cls, location: Tuple[int, int], num: int = 1):
+        if len(cls.pool) < num:
+            cls.pool.add([Missile() for _ in range(num)])
+        x_all = ((-(num-1)/2 + i)*30 for i in range(num))
+        for x in x_all:
+            print(456)
+            missile = cls.pool.sprites()[0]
+            missile.add(cls.allsprites, cls.active)
+            missile.remove(cls.pool)
+            missile.rect.bottom = location[1]
+            missile.rect.x = int(x + location[0])
+
+    def recycle(self):
+        self.add(self.pool)
+        self.remove(self.allsprites, self.active)
+
+    def update(self):
+        self.rect = self.rect.move(0, 0.2 * self.speed)
+        if self.rect.bottom < self.area.bottom:
+            self.recycle()
     
 
 # class FallingItem(pygame.sprite.Sprite):
