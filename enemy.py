@@ -7,7 +7,7 @@ class Enemy(pygame.sprite.Sprite):
 	
 	def __init__(self, position):
 		super(Enemy, self).__init__()
-		self.image = pygame.image.load('~~~~~~')
+		self.image = pygame.image.load("C:/Users/user/Desktop/airplane.png")
 		self.rect = self.image.get_rect()
 		self.rect.x = position[0]
 		self.rect.y = position[1]
@@ -16,9 +16,8 @@ class Enemy(pygame.sprite.Sprite):
 	def update(self):
 		self.rect.y += self.speed 
 
-
-class FallingItem(Enemy):
     allsprites = None
+    
     def __init__(self):
         super().__init__()
         screen = pygame.display.get_surface()
@@ -39,12 +38,11 @@ class FallingItem(Enemy):
             self.kill()
 
 
-from src.enemy import enemy
+
 from enemy import *
 
 pygame.init()
 
-enemy_sprites = pygame.sprite.Group()
 
 for i in range(60):
 	enemy = Enemy((random.randrange(0, WIDTH), random.randrange(0,50)))
@@ -70,8 +68,8 @@ if pygame.sprite.spritecollideany(plane, enemy_sprites) is not None:
 init_enemy(ENEMY_SIZE)
 
 # 增加敵艦
-if len(enemy_sprites) <= ENEMY_MIN_SIZE:
-    init_enemy(ENEMY_SIZE - len(enemy_sprites))
+if len(enemy_group) <= ENEMY_MIN_SIZE:
+    init_enemy(ENEMY_SIZE - len(enemy_group))
 
 
 
