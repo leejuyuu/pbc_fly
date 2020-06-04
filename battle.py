@@ -13,7 +13,7 @@ POWER_UP_PROB = 0.001
 IMG_DIR = Path(__file__).resolve().parent / 'img'
 
 # functions to create our resources
-def load_image(name, colorkey=None):
+def load_image(name, colorkey=None, scale=None):
     path = IMG_DIR / name
     try:
         image = pygame.image.load(str(path))
@@ -25,12 +25,18 @@ def load_image(name, colorkey=None):
         if colorkey == -1:
             colorkey = image.get_at((0, 0))
         image.set_colorkey(colorkey, pygame.RLEACCEL)
+    if scale is not None:
+        image = pygame.transform.scale(image, scale)
     return image, image.get_rect()
 
 class Plane(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image, self.rect = load_image('plane.png')
+        self.all_images = [load_image('plane_lv{}.png'.format(i),
+                                      colorkey=-1,
+                                      scale=(64, 68))[0] for i in range(1, 4)]
+        self.image = self.all_images[0]
+        self.rect = self.image.get_rect()
 
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()
@@ -42,6 +48,7 @@ class Plane(pygame.sprite.Sprite):
         self.horiz = 0
         self.speed = 1
         self.hp = INITIAL_HP
+        self.power = 0
 
     def key_pressed(self):
         keys_pressed = pygame.key.get_pressed()
@@ -65,6 +72,12 @@ class Plane(pygame.sprite.Sprite):
         if self.hp > INITIAL_HP:
             self.hp = INITIAL_HP
 
+    def powerup(self):
+        if self.power < 2:
+            self.power += 1
+            self.image = self.all_images[self.power]
+
+
 
 class Missile(pygame.sprite.Sprite):
     pool = pygame.sprite.Group()
@@ -72,7 +85,7 @@ class Missile(pygame.sprite.Sprite):
 
     def __init__(self):
         super().__init__()
-        self.image, self.rect = load_image('bullet.png')
+        self.image, self.rect = load_image('bullet.png', colorkey=-1, scale=(5, 20))
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()
         self.speed = 10
@@ -81,7 +94,7 @@ class Missile(pygame.sprite.Sprite):
     def position(cls, location: Tuple[int, int], num: int = 1):
         if len(cls.pool) < num:
             cls.pool.add([Missile() for _ in range(num)])
-        x_all = ((-(num-1)/2 + i)*50 for i in range(num))
+        x_all = ((-(num-1)/2 + i)*30 for i in range(num))
         for x in x_all:
             missile = cls.pool.sprites()[0]
             missile.add(cls.allsprites, cls.active)
@@ -123,13 +136,13 @@ class FallingItem(pygame.sprite.Sprite):
 class PowerUp(FallingItem):
     def __init__(self):
         super().__init__()
-        self.image, self.rect = load_image('powerup.png')
+        self.image, self.rect = load_image('powerup.png', colorkey=-1, scale=(25, 25))
 
 
 class HpPack(FallingItem):
     def __init__(self):
         super().__init__()
-        self.image, self.rect = load_image('hp_pack.png')
+        self.image, self.rect = load_image('hp_pack.png', colorkey=-1, scale=(25, 25))
 
 
 def main():
@@ -138,13 +151,14 @@ def main():
     pygame.display.set_caption('pbc fly')
     pygame.mouse.set_visible(0)
 
-    background, background_size = load_image('skybackground.jpg')
+    background, _ = load_image('skybackground.jpg')
     background = pygame.transform.scale(background, (480, 640))
     background = background.convert()
     background1_rect = pygame.Rect(0, 0, 480, 640)
     background2_rect = pygame.Rect(0, 0, 480, 640)
 
-    bloodH = 15
+    barW = 160
+    barH = 15
     bloodx = 5
     bloody = 620
 
@@ -190,7 +204,9 @@ def main():
         allsprites.update()
 
         if powerup in allsprites and pygame.sprite.collide_rect(plane, powerup):
-            n_missile += 1
+            if n_missile < 3:
+                n_missile += 1
+            plane.powerup()
             powerup.kill()
 
         if hp_pack in allsprites and pygame.sprite.collide_rect(plane, hp_pack):
