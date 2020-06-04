@@ -13,7 +13,7 @@ POWER_UP_PROB = 0.001
 IMG_DIR = Path(__file__).resolve().parent / 'img'
 
 # functions to create our resources
-def load_image(name, colorkey=None):
+def load_image(name, colorkey=None, scale=None):
     path = IMG_DIR / name
     try:
         image = pygame.image.load(str(path))
@@ -25,12 +25,14 @@ def load_image(name, colorkey=None):
         if colorkey == -1:
             colorkey = image.get_at((0, 0))
         image.set_colorkey(colorkey, pygame.RLEACCEL)
+    if scale is not None:
+        image = pygame.transform.scale(image, scale)
     return image, image.get_rect()
 
 class Plane(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image, self.rect = load_image('plane.png')
+        self.image, self.rect = load_image('plane_lv1.png', colorkey=-1, scale=(64, 68))
 
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()
@@ -72,7 +74,7 @@ class Missile(pygame.sprite.Sprite):
 
     def __init__(self):
         super().__init__()
-        self.image, self.rect = load_image('bullet.png')
+        self.image, self.rect = load_image('bullet.png', colorkey=-1, scale=(5, 20))
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()
         self.speed = 10
@@ -123,13 +125,13 @@ class FallingItem(pygame.sprite.Sprite):
 class PowerUp(FallingItem):
     def __init__(self):
         super().__init__()
-        self.image, self.rect = load_image('powerup.png')
+        self.image, self.rect = load_image('powerup.png', colorkey=-1, scale=(25, 25))
 
 
 class HpPack(FallingItem):
     def __init__(self):
         super().__init__()
-        self.image, self.rect = load_image('hp_pack.png')
+        self.image, self.rect = load_image('hp_pack.png', colorkey=-1, scale=(25, 25))
 
 
 def main():
@@ -138,7 +140,7 @@ def main():
     pygame.display.set_caption('pbc fly')
     pygame.mouse.set_visible(0)
 
-    background, background_size = load_image('skybackground.jpg')
+    background, _ = load_image('skybackground.jpg')
     background = pygame.transform.scale(background, (480, 640))
     background = background.convert()
     background1_rect = pygame.Rect(0, 0, 480, 640)
