@@ -7,7 +7,7 @@ class Enemy(pygame.sprite.Sprite):
 	
 	def __init__(self, position):
 		super(Enemy, self).__init__()
-		self.image = pygame.image.load('enemy.png')
+		self.image = pygame.image.load('~~~~~~')
 		self.rect = self.image.get_rect()
 		self.rect.x = position[0]
 		self.rect.y = position[1]
@@ -17,7 +17,7 @@ class Enemy(pygame.sprite.Sprite):
 		self.rect.y += self.speed 
 
 
-class FallingItem(pygame.sprite.Sprite):
+class FallingItem(Enemy):
     allsprites = None
     def __init__(self):
         super().__init__()
@@ -39,7 +39,7 @@ class FallingItem(pygame.sprite.Sprite):
             self.kill()
 
 
-from pbc_fly.enemy import enemy
+from src.enemy import enemy
 from enemy import *
 
 pygame.init()
