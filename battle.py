@@ -5,6 +5,7 @@ from pathlib import Path
 import random
 from typing import Tuple
 import pygame
+import enemy
 
 INITIAL_HP = 160
 HP_INCREMENT = 10
@@ -213,6 +214,9 @@ def main():
             if random.random() <= HP_PACK_PROB:
                 hp_pack.appear()
 
+
+        if not frame % 10:
+            allsprites.add(enemy.Enemy(0))
         allsprites.update()
 
         if powerup in allsprites and pygame.sprite.collide_rect(plane, powerup):
