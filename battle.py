@@ -32,7 +32,11 @@ def load_image(name, colorkey=None, scale=None):
 class Plane(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image, self.rect = load_image('plane_lv1.png', colorkey=-1, scale=(64, 68))
+        self.all_images = [load_image('plane_lv{}.png'.format(i),
+                                      colorkey=-1,
+                                      scale=(64, 68))[0] for i in range(1, 4)]
+        self.image = self.all_images[0]
+        self.rect = self.image.get_rect()
 
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()
@@ -44,6 +48,7 @@ class Plane(pygame.sprite.Sprite):
         self.horiz = 0
         self.speed = 1
         self.hp = INITIAL_HP
+        self.power = 0
 
     def key_pressed(self):
         keys_pressed = pygame.key.get_pressed()
@@ -66,6 +71,12 @@ class Plane(pygame.sprite.Sprite):
 
         if self.hp > INITIAL_HP:
             self.hp = INITIAL_HP
+
+    def powerup(self):
+        if self.power < 2:
+            self.power += 1
+            self.image = self.all_images[self.power]
+
 
 
 class Missile(pygame.sprite.Sprite):
@@ -193,7 +204,9 @@ def main():
         allsprites.update()
 
         if powerup in allsprites and pygame.sprite.collide_rect(plane, powerup):
-            n_missile += 1
+            if n_missile < 3:
+                n_missile += 1
+            plane.powerup()
             powerup.kill()
 
         if hp_pack in allsprites and pygame.sprite.collide_rect(plane, hp_pack):
