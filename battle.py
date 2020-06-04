@@ -224,7 +224,7 @@ def main():
 
 
         if not frame % 100:
-            new_enemy = enemy.Enemy(0)
+            new_enemy = enemy.Enemy()
             new_enemy.add(allsprites, enemies)
             
         if not frame % 10:

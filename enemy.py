@@ -10,7 +10,7 @@ INITIAL_HP_ENEMY = 80
 
 class Enemy(pygame.sprite.Sprite):
 
-    def __init__(self, position):
+    def __init__(self):
         super(Enemy, self).__init__()
         self.image, self.rect = battle.load_image('enemy1.png', colorkey=-1, scale=(32, 34))
 
