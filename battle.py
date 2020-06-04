@@ -94,7 +94,7 @@ class Missile(pygame.sprite.Sprite):
     def position(cls, location: Tuple[int, int], num: int = 1):
         if len(cls.pool) < num:
             cls.pool.add([Missile() for _ in range(num)])
-        x_all = ((-(num-1)/2 + i)*50 for i in range(num))
+        x_all = ((-(num-1)/2 + i)*30 for i in range(num))
         for x in x_all:
             missile = cls.pool.sprites()[0]
             missile.add(cls.allsprites, cls.active)
