@@ -24,7 +24,6 @@ class Enemy(pygame.sprite.Sprite):
 
 
     def update(self):
-        self.rect.y += self.speed 
         self.rect = self.rect.move(0, 1 * self.speed)
         if self.rect.bottom > self.area.bottom:
             self.kill()
@@ -44,7 +43,7 @@ class Enemy_Missile(pygame.sprite.Sprite):
     @classmethod
     def position(cls, location: Tuple[int, int], num: int = 1):
         if len(cls.pool) < num:
-            cls.pool.add([Missile() for _ in range(num)])
+            cls.pool.add([Enemy_Missile() for _ in range(num)])
         x_all = ((-(num-1)/2 + i)*30 for i in range(num))
         for x in x_all:
             print(456)
@@ -52,17 +51,16 @@ class Enemy_Missile(pygame.sprite.Sprite):
             missile.add(cls.allsprites, cls.active)
             missile.remove(cls.pool)
             missile.rect.bottom = location[1]
-            missile.rect.x = int(x + location[0])
+            missile.rect.centerx = int(x + location[0])
 
     def recycle(self):
         self.add(self.pool)
         self.remove(self.allsprites, self.active)
 
     def update(self):
-        self.rect = self.rect.move(0, 0.2 * self.speed)
-        if self.rect.bottom < self.area.bottom:
+        self.rect = self.rect.move(0, 2 * self.speed)
+        if self.rect.bottom > self.area.bottom:
             self.recycle()
-    
 
 # class FallingItem(pygame.sprite.Sprite):
 #     allsprites = None
