@@ -46,7 +46,6 @@ class Enemy_Missile(pygame.sprite.Sprite):
             cls.pool.add([Enemy_Missile() for _ in range(num)])
         x_all = ((-(num-1)/2 + i)*30 for i in range(num))
         for x in x_all:
-            print(456)
             missile = cls.pool.sprites()[0]
             missile.add(cls.allsprites, cls.active)
             missile.remove(cls.pool)

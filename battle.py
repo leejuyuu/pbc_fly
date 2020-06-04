@@ -220,23 +220,14 @@ def main():
             if random.random() <= HP_PACK_PROB:
                 hp_pack.appear()
 
-
-
-
         if not frame % 100:
             new_enemy = enemy.Enemy()
             new_enemy.add(allsprites, enemies)
-            
+
         if not frame % fire_period:
-            for a_enemy in enemies:  
-                print(123)
-                print(len(enemy.Enemy_Missile.pool))
-                print(a_enemy.rect.midbottom)
+            for a_enemy in enemies:
                 enemy.Enemy_Missile.position(a_enemy.rect.midbottom, 1)
         allsprites.update()
-
-
-
 
         if powerup in allsprites and pygame.sprite.collide_rect(plane, powerup):
             if n_missile < 3:
