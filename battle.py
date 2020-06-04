@@ -58,6 +58,10 @@ class Plane(pygame.sprite.Sprite):
             self.horiz = -2 * self.speed
         if keys_pressed[pygame.K_RIGHT]:
             self.horiz = 2 * self.speed
+        if keys_pressed[pygame.K_UP]:
+            self.vert = -2 * self.speed
+        if keys_pressed[pygame.K_DOWN]:
+            self.vert = 2 * self.speed
 
     def update(self):
         new_rect = self.rect.move((self.horiz, self.vert))
@@ -67,6 +71,10 @@ class Plane(pygame.sprite.Sprite):
                 new_rect.left = self.area.left
             elif new_rect.right > self.area.right:
                 new_rect.right = self.area.right
+            elif new_rect.top < self.area.top:
+                new_rect.top = self.area.top
+            elif new_rect.bottom > self.area.bottom:
+                new_rect.bottom = self.area.bottom
         self.rect = new_rect
 
         if self.hp > INITIAL_HP:
