@@ -162,6 +162,9 @@ def main():
     bloodx = 5
     bloody = 620
 
+    score = 0
+    score_font = pygame.font.SysFont('arial', 25)
+
     plane = Plane()
     allsprites = pygame.sprite.RenderPlain((plane))
     # Create 10 missiles and store them in the class variable pool
@@ -185,6 +188,7 @@ def main():
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 return
 
+        score += 1/30
         background1_rect.y += 1
         if background2_rect.y + background1_rect.y > 640 :
             background1_rect.y = 0
@@ -214,6 +218,7 @@ def main():
             hp_pack.kill()
 
         allsprites.update()
+        score_text = score_font.render('Score : %s' % str(score), True, (225, 225, 225))
 
         # Draw Everything
         screen.blit(background, (0, background1_rect.y))
@@ -221,6 +226,7 @@ def main():
         pygame.draw.rect(screen, (0, 0, 150), [bloodx - 3, bloody - 3, INITIAL_HP + 6, barH + 6])
         pygame.draw.rect(screen, (130, 0, 0), [bloodx, bloody, INITIAL_HP, barH])
         pygame.draw.rect(screen, (200, 0, 0), [bloodx, bloody, plane.hp, barH])
+        screen.blit(score_text, (10, 5))
         allsprites.draw(screen)
         pygame.display.flip()
     pygame.quit()
