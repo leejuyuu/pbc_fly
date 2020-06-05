@@ -12,6 +12,8 @@ INITIAL_HP = 160
 HP_INCREMENT = 10
 HP_PACK_PROB = 0.001
 POWER_UP_PROB = 0.001
+HIT_HP_DROP = 10
+COLLIDE_HP_DROP = 20
 IMG_DIR = Path(__file__).resolve().parent / 'img'
 
 # functions to create our resources
@@ -45,7 +47,7 @@ class Plane(pygame.sprite.Sprite):
         # Put the rect at the bottom center of the screen
         self.rect.centerx = int(self.area.width // 2)
         self.rect.bottom = int(self.area.height * 0.95)
-        self.radius = max(self.rect.width, self.rect.height)
+        self.radius = max(self.rect.width, self.rect.height) // 2
         self.vert = 0
         self.horiz = 0
         self.speed = 1
@@ -238,6 +240,22 @@ def main():
         if hp_pack in allsprites and pygame.sprite.collide_rect(plane, hp_pack):
             plane.hp += HP_INCREMENT
             hp_pack.kill()
+
+        # Check if enemy collide with our plane
+        for a_enemy in enemies:
+            if pygame.sprite.collide_circle(plane, a_enemy):
+                plane.hp -= COLLIDE_HP_DROP
+                a_enemy.kill()
+
+        # Check if enemy's missile hit our plane
+        for missile in enemy.Enemy_Missile.active:
+            if pygame.sprite.collide_circle(plane, missile):
+                missile.recycle()
+                plane.hp -= HIT_HP_DROP
+
+        # End the game if the HP goes to 0
+        if plane.hp <= 0:
+            break
 
         allsprites.update()
         score_text = score_font.render('Score : %s' % str(score), True, (225, 225, 225))
