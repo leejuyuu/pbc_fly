@@ -92,6 +92,10 @@ class Plane(pygame.sprite.Sprite):
     def fire(self):
         Missile.position(self.rect.midtop, self.power + 1)
 
+    def remove_powerup(self):
+        self.power = 0
+        self.image = self.all_images[0]
+
 
 
 class Missile(pygame.sprite.Sprite):
@@ -245,6 +249,7 @@ def main():
         for a_enemy in enemies:
             if pygame.sprite.collide_circle(plane, a_enemy):
                 plane.hp -= COLLIDE_HP_DROP
+                plane.remove_powerup()
                 a_enemy.kill()
 
         # Check if enemy's missile hit our plane
@@ -252,6 +257,7 @@ def main():
             if pygame.sprite.collide_circle(plane, missile):
                 missile.recycle()
                 plane.hp -= HIT_HP_DROP
+                plane.remove_powerup()
 
         # End the game if the HP goes to 0
         if plane.hp <= 0:
