@@ -89,6 +89,9 @@ class Plane(pygame.sprite.Sprite):
             self.power += 1
             self.image = self.all_images[self.power]
 
+    def fire(self):
+        Missile.position(self.rect.midtop, self.power + 1)
+
 
 
 class Missile(pygame.sprite.Sprite):
@@ -193,7 +196,6 @@ def main():
     fire_period = 20
     clock = pygame.time.Clock()
 
-    n_missile = 1
     frame = 0
     while True:
         frame += 1
@@ -213,7 +215,7 @@ def main():
 
         plane.key_pressed()
         if not frame % fire_period:
-            Missile.position(plane.rect.midtop, n_missile)
+            plane.fire()
 
         if powerup not in allsprites and random.random() <= POWER_UP_PROB:
             powerup.appear()
@@ -232,8 +234,6 @@ def main():
         allsprites.update()
 
         if powerup in allsprites and pygame.sprite.collide_rect(plane, powerup):
-            if n_missile < 3:
-                n_missile += 1
             plane.powerup()
             powerup.kill()
 
