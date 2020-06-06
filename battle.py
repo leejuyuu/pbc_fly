@@ -176,9 +176,7 @@ def main():
     pygame.display.set_caption('pbc fly')
     pygame.mouse.set_visible(0)
 
-    background, _ = load_image('skybackground.jpg')
-    background = pygame.transform.scale(background, (480, 640))
-    background = background.convert()
+    background, _ = load_image('skybackground.jpg', scale=(480, 640))
     background1_rect = pygame.Rect(0, 0, 480, 640)
     background2_rect = pygame.Rect(0, 0, 480, 640)
 
