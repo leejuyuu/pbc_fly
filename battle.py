@@ -132,7 +132,10 @@ class Missile(pygame.sprite.Sprite):
 
 
 class FallingItem(pygame.sprite.Sprite):
-    allsprites = None
+    """
+    The base class for all randomly falling items which show up once in a while.
+    """
+    allsprites = None  # Handle to the 'allsprites' group in the main function
     def __init__(self):
         super().__init__()
         screen = pygame.display.get_surface()
@@ -153,18 +156,21 @@ class FallingItem(pygame.sprite.Sprite):
             self.kill()
 
 class PowerUp(FallingItem):
+    """Sprite for falling powerup items. See base class."""
     def __init__(self):
         super().__init__()
         self.image, self.rect = load_image('powerup.png', colorkey=-1, scale=(25, 25))
 
 
 class HpPack(FallingItem):
+    """Sprite for falling HP packs. See base class."""
     def __init__(self):
         super().__init__()
         self.image, self.rect = load_image('hp_pack.png', colorkey=-1, scale=(25, 25))
 
 
 def main():
+    """This is the main function."""
     pygame.init()
     screen = pygame.display.set_mode((480, 640))
     pygame.display.set_caption('pbc fly')
@@ -202,31 +208,37 @@ def main():
 
     frame = 0
     while True:
-        frame += 1
-        clock.tick(60)
+        frame += 1  # Loop counter
+        clock.tick(60)  # Max FPS = 60
 
+        # Event handling
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 return
 
         score += 1/30
         background1_rect.y += 1
-        if background2_rect.y + background1_rect.y > 640 :
+        if background2_rect.y + background1_rect.y > 640:
             background1_rect.y = 0
         background2_rect.bottom = background1_rect.y
 
         plane.key_pressed()
+
+        # The plane fires every constant period (frames)
         if not frame % fire_period:
             plane.fire()
 
+        # Randomly put a powerup item on the top of the screen if it is not
+        # already on the screen
         if powerup not in allsprites and random.random() <= POWER_UP_PROB:
             powerup.appear()
 
-        if hp_pack not in allsprites:
-            if random.random() <= HP_PACK_PROB:
-                hp_pack.appear()
+        # Randomly put a HP pack item on the top of the screen if it is not
+        # already on the screen
+        if hp_pack not in allsprites and random.random() <= HP_PACK_PROB:
+            hp_pack.appear()
 
         if not frame % 100:
             new_enemy = enemy.Enemy()
@@ -237,10 +249,12 @@ def main():
                 enemy.Enemy_Missile.position(a_enemy.rect.midbottom, 1)
         allsprites.update()
 
+        # Increase missiles fired at once if collided with powerup item
         if powerup in allsprites and pygame.sprite.collide_rect(plane, powerup):
             plane.powerup()
             powerup.kill()
 
+        # Recover HP if collided with HP pack item
         if hp_pack in allsprites and pygame.sprite.collide_rect(plane, hp_pack):
             plane.hp += HP_INCREMENT
             hp_pack.kill()
