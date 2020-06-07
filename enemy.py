@@ -7,7 +7,9 @@ import battle
 import random
 
 INITIAL_HP_ENEMY = 80
+INITIAL_HP_BOSS = 300
 
+# 敵人本身設定
 class Enemy(pygame.sprite.Sprite):
 
     def __init__(self):
@@ -17,18 +19,42 @@ class Enemy(pygame.sprite.Sprite):
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()
         self.radius = max(self.rect.width, self.rect.height)
-        self.speed = 1
+        self.speed = 0.9
         self.rect.left = random.randrange(self.area.width - self.rect.width)
         self.rect.top = self.area.top
         self.hp = INITIAL_HP_ENEMY
 
 
     def update(self):
-        self.rect = self.rect.move(0, 1 * self.speed)
+        self.rect = self.rect.move(0, 1.5 * self.speed)
+
+        if self.hp <= 0:
+            self.kill()
+
         if self.rect.bottom > self.area.bottom:
             self.kill()
 
 
+class Boss(pygame.sprite.Sprite):
+    def __init__(self):
+        super(Enemy, self).__init__()
+        self.image, self.rect = battle.load_image('boss1.png', colorkey=-1, scale=(64, 68))
+        screen = pygame.display.get_surface()
+        self.area = screen.get_rect()
+        self.radius = max(self.rect.width, self.rect.height)
+        self.speed = 0.8
+        self.rect.left = random.randrange(self.area.width - self.rect.width)
+        self.rect.top = self.area.top
+        self.hp = INITIAL_HP_BOSS
+
+
+    def update(self):
+        self.rect = self.rect.move(1.5 * self.speed, 0)
+        if self.hp <= 0:
+            self.kill()
+
+
+# 敵人射出的飛彈
 class Enemy_Missile(pygame.sprite.Sprite):
     pool = pygame.sprite.Group()
     active = pygame.sprite.Group()
@@ -57,64 +83,9 @@ class Enemy_Missile(pygame.sprite.Sprite):
         self.remove(self.allsprites, self.active)
 
     def update(self):
-        self.rect = self.rect.move(0, 2 * self.speed)
+        self.rect = self.rect.move(0, 2 * self.speed) # 敵人移動速度
         if self.rect.bottom > self.area.bottom:
             self.recycle()
 
-# class FallingItem(pygame.sprite.Sprite):
-#     allsprites = None
-#     def __init__(self):
-#         super().__init__()
-#         screen = pygame.display.get_surface()
-#         self.area = screen.get_rect()
-#         self.speed = 1
-
-#     def appear(self, position: int = None):
-#         self.rect.top = self.area.top
-#         if position is None:
-#             self.rect.left = random.randrange(self.area.width - 2 * self.rect.width)
-#         else:
-#             self.rect.x = position
-#         self.add(self.allsprites)
-
-#     def update(self):
-#         self.rect = self.rect.move(0, 1 * self.speed)
-#         if self.rect.bottom > self.area.bottom:
-#             self.kill()
 
 
-
-
-# for i in range(60):
-# 	enemy = Enemy((random.randrange(0, WIDTH), random.randrange(0,50)))
-# 	enemy_sprites.add(enemy)
-# 	all_sprites.add(enemy)
-
-# # 子彈擊毀敵艦
-# bullet_collide_dic = pygame.sprite.groupcollide(bullet_sprites, enemy_sprites, True, True)
-# for bullet in bullet_collide_dic:
-#     print(bullet, bullet_collide_dic)
-
-
-# # 遊戲結束的情形（敵艦撞機）
-# self.rect.x = self.bg_size[0]/2
-# self.rect.y = self.bg_size[-1]
-# self.rect.height
-
-# if pygame.sprite.spritecollideany(plane, enemy_sprites) is not None:
-#     print('killed')
-#     running = False
-
-# # 批量化出現敵艦
-# init_enemy(ENEMY_SIZE)
-
-# # 增加敵艦
-# if len(enemy_group) <= ENEMY_MIN_SIZE:
-#     init_enemy(ENEMY_SIZE - len(enemy_group))
-
-
-
-# pygame.display.update()
-
-# pygame.quit()
- 
