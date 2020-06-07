@@ -195,6 +195,12 @@ def main():
     enemy.Enemy_Missile.allsprites = allsprites
     enemies = pygame.sprite.Group()
 
+    # # add boss (by andrew95082)
+    # enemy.Boss_Missile.pool = pygame.sprite.Group([enemy.Boss_Missile() for _ in range(10)])
+    # enemy.Boss_Missile.allsprites = allsprites
+    # bosses = pygame.sprite.Group()
+
+
     hp_pack = HpPack()
     powerup = PowerUp()
     fire_period = 20
@@ -245,6 +251,17 @@ def main():
             plane.hp += HP_INCREMENT
             hp_pack.kill()
 
+        # # add boss' apperance (by andrew95082)
+        # if frame % 2000:
+        #     new_boss = enemy.Boss()
+        #     new_boss.add(allsprites, bosses)
+
+        # if not frame % fire_period:
+        #     for a_boss in bosses:
+        #         enemy.Boss_Missile.position(a_boss.rect.midbottom, 1)
+        # allsprites.update()
+
+
         # Check if enemy collide with our plane
         for a_enemy in enemies:
             if pygame.sprite.collide_circle(plane, a_enemy):
@@ -252,12 +269,35 @@ def main():
                 plane.remove_powerup()
                 a_enemy.kill()
 
+
         # Check if enemy's missile hit our plane
         for missile in enemy.Enemy_Missile.active:
             if pygame.sprite.collide_circle(plane, missile):
                 missile.recycle()
                 plane.hp -= HIT_HP_DROP
                 plane.remove_powerup()
+
+ 
+        # Check if our plane's missile hit enemy (by andrew95082)
+        for missile in Missile.active:
+            for a_enemy in enemies:
+                if pygame.sprite.collide_circle(a_enemy, missile):
+                    missile.recycle()
+                    a_enemy.hp -= HIT_HP_DROP
+                if a_enemy.hp <= 0:
+                     a_enemy.kill()
+                     for missile in enemy.Enemy_Missile.active:
+                        missile.recycle()
+
+
+        # # Check if boss collide with our plane (add by andrew95082)
+        # for a_boss in bosses:
+        #     if pygame.sprite.collide_circle(plane, a_boss):
+        #         plane.hp -= COLLIDE_HP_DROP
+        #         plane.remove_powerup()
+        #         a_boss.kill()
+
+
 
         # End the game if the HP goes to 0
         if plane.hp <= 0:
