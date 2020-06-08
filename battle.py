@@ -266,10 +266,10 @@ def main():
             plane.hp += HP_INCREMENT
             hp_pack.kill()
 
-        # Boss' apperance 
-        if frame == 300:
-            new_boss = enemy.Boss()
-            new_boss.add(allsprites, bosses)
+        # # Boss' apperance 
+        # if frame == 300:
+        #     new_boss = enemy.Boss()
+        #     new_boss.add(allsprites, bosses)
 
         # # Boss fires missile
         # if not frame % enemy_fire_period:
@@ -302,9 +302,7 @@ def main():
                     a_enemy.hp -= HIT_HP_DROP
                 if a_enemy.hp <= 0:
                      a_enemy.kill()
-                     for missile in enemy.Enemy_Missile.active:
-                        missile.recycle()
-
+                   
 
         # # Check if boss collide with our plane
         # for a_boss in bosses:
