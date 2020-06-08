@@ -199,15 +199,15 @@ def main():
     enemy.Enemy_Missile.allsprites = allsprites
     enemies = pygame.sprite.Group()
 
-    # # add boss (by andrew95082)
+    # # Add boss group
     # enemy.Boss_Missile.pool = pygame.sprite.Group([enemy.Boss_Missile() for _ in range(10)])
     # enemy.Boss_Missile.allsprites = allsprites
     # bosses = pygame.sprite.Group()
 
-
     hp_pack = HpPack()
     powerup = PowerUp()
     fire_period = 20
+    enemy_fire_period = 120
     clock = pygame.time.Clock()
 
     frame = 0
@@ -244,13 +244,16 @@ def main():
         if hp_pack not in allsprites and random.random() <= HP_PACK_PROB:
             hp_pack.appear()
 
+        # Enemy's apperance
         if not frame % 100:
             new_enemy = enemy.Enemy()
             new_enemy.add(allsprites, enemies)
 
-        if not frame % fire_period:
+        # Enemy fires missile
+        if not frame % enemy_fire_period:
             for a_enemy in enemies:
-                enemy.Enemy_Missile.position(a_enemy.rect.midbottom, 1)
+                for i in range(3):
+                    enemy.Enemy_Missile.position(a_enemy.rect.midbottom, i)
         allsprites.update()
 
         # Increase missiles fired at once if collided with powerup item
@@ -263,16 +266,17 @@ def main():
             plane.hp += HP_INCREMENT
             hp_pack.kill()
 
-        # # add boss' apperance (by andrew95082)
-        # if frame % 2000:
-        #     new_boss = enemy.Boss()
-        #     new_boss.add(allsprites, bosses)
+        # Boss' apperance 
+        if frame == 300:
+            new_boss = enemy.Boss()
+            new_boss.add(allsprites, bosses)
 
-        # if not frame % fire_period:
+        # # Boss fires missile
+        # if not frame % enemy_fire_period:
         #     for a_boss in bosses:
-        #         enemy.Boss_Missile.position(a_boss.rect.midbottom, 1)
+        #         for i in range(3):
+        #             enemy.Boss_Missile.position(a_boss.rect.midbottom, i)
         # allsprites.update()
-
 
         # Check if enemy collide with our plane
         for a_enemy in enemies:
@@ -290,7 +294,7 @@ def main():
                 plane.remove_powerup()
 
  
-        # Check if our plane's missile hit enemy (by andrew95082)
+        # Check if our plane's missile hit enemy 
         for missile in Missile.active:
             for a_enemy in enemies:
                 if pygame.sprite.collide_circle(a_enemy, missile):
@@ -302,7 +306,7 @@ def main():
                         missile.recycle()
 
 
-        # # Check if boss collide with our plane (add by andrew95082)
+        # # Check if boss collide with our plane
         # for a_boss in bosses:
         #     if pygame.sprite.collide_circle(plane, a_boss):
         #         plane.hp -= COLLIDE_HP_DROP
@@ -310,6 +314,16 @@ def main():
         #         a_boss.kill()
 
 
+        # # Check if our plane's missile hit boss 
+        # for missile in Missile.active:
+        #     for a_boss in bosses:
+        #         if pygame.sprite.collide_circle(a_boss, missile):
+        #             missile.recycle()
+        #             a_boss.hp -= HIT_HP_DROP
+        #         if a_boss.hp <= 0:
+        #              a_boss.kill()
+        #              for missile in enemy.Boss_Missile.active:
+        #                 missile.recycle()
 
         # End the game if the HP goes to 0
         if plane.hp <= 0:

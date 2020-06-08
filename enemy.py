@@ -34,7 +34,7 @@ class Enemy(pygame.sprite.Sprite):
         if self.rect.bottom > self.area.bottom:
             self.kill()
 
-
+# 魔王本身設定
 class Boss(pygame.sprite.Sprite):
     def __init__(self):
         super(Boss, self).__init__()
@@ -42,20 +42,27 @@ class Boss(pygame.sprite.Sprite):
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()
         self.radius = max(self.rect.width, self.rect.height)
-        self.speed = 0.8
+        self.speed = 0.7
         self.rect.left = random.randrange(self.area.width - self.rect.width)
         self.rect.top = self.area.top
         self.hp = INITIAL_HP_BOSS
 
 
     def update(self):
-        self.rect = self.rect.move(1.5 * self.speed, 0)
+        self.rect = self.rect.move(1.2 * self.speed, 0)
+
+        if self.rect.right >= self.area.right:
+            self.rect = self.rect.move(-1.2 * self.speed, 0)
+
+        if self.rect.left >= self.area.left:
+            self.rect = self.rect.move(-1.2 * self.speed, 0)
+
         if self.hp <= 0:
             self.kill()
 
 
 
-# 敵人射出的飛彈
+# 魔王射出的飛彈
 class Boss_Missile(pygame.sprite.Sprite):
     pool = pygame.sprite.Group()
     active = pygame.sprite.Group()
