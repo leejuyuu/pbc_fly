@@ -7,7 +7,7 @@ import battle
 import random
 
 INITIAL_HP_ENEMY = 30
-INITIAL_HP_BOSS = 100
+INITIAL_HP_BOSS = 60
 
 # 敵人本身設定
 class Enemy(pygame.sprite.Sprite):
@@ -19,7 +19,7 @@ class Enemy(pygame.sprite.Sprite):
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()
         self.radius = max(self.rect.width, self.rect.height)
-        self.speed = 0.9
+        self.speed = 2
         self.rect.left = random.randrange(self.area.width - self.rect.width)
         self.rect.top = self.area.top
         self.hp = INITIAL_HP_ENEMY
@@ -43,20 +43,19 @@ class Boss(pygame.sprite.Sprite):
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()
         self.radius = max(self.rect.width, self.rect.height)
-        self.speed = 0.7
+        self.speed = 1.5
         self.rect.left = random.randrange(self.area.width - self.rect.width)
         self.rect.top = self.area.top
         self.hp = INITIAL_HP_BOSS
+        self.direction = 1
 
 
     def update(self):
-        self.rect = self.rect.move(1.2 * self.speed, 0)
+        self.rect = self.rect.move(self.direction * self.speed, 0)
 
-        if self.rect.right >= self.area.right:
-            self.rect = self.rect.move(-1.2 * self.speed, 0)
-
-        if self.rect.left >= self.area.left:
-            self.rect = self.rect.move(-1.2 * self.speed, 0)
+        if not (self.area.right >= self.rect.right and self.rect.left >= self.area.left):
+            self.direction *= -1
+      
 
         if self.hp <= 0:
             self.kill()
@@ -73,7 +72,7 @@ class Boss_Missile(pygame.sprite.Sprite):
         self.image, self.rect = battle.load_image('bullet.png', colorkey=-1, scale=(5, 20))
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()
-        self.speed = 1
+        self.speed = 1.5
 
     @classmethod
     def position(cls, location: Tuple[int, int], num: int = 1):
@@ -107,7 +106,7 @@ class Enemy_Missile(pygame.sprite.Sprite):
         self.image, self.rect = battle.load_image('bullet.png', colorkey=-1, scale=(5, 20))
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()
-        self.speed = 1
+        self.speed = 2
 
     @classmethod
     def position(cls, location: Tuple[int, int], num: int = 1):
