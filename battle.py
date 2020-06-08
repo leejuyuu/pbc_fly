@@ -208,6 +208,7 @@ def main():
     powerup = PowerUp()
     fire_period = 20
     enemy_fire_period = 120
+    fire_wait = 20
     clock = pygame.time.Clock()
 
     frame = 0
@@ -252,8 +253,14 @@ def main():
         # Enemy fires missile
         if not frame % enemy_fire_period:
             for a_enemy in enemies:
-                for i in range(3):
-                    enemy.Enemy_Missile.position(a_enemy.rect.midbottom, i)
+                if not a_enemy.missile_number:
+                    a_enemy.missile_number = 3
+
+        if not frame % fire_wait:
+            for a_enemy in enemies:
+                if a_enemy.missile_number:
+                    a_enemy.missile_number -= 1
+                    enemy.Enemy_Missile.position(a_enemy.rect.midbottom)
         allsprites.update()
 
         # Increase missiles fired at once if collided with powerup item

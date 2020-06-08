@@ -23,6 +23,7 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.left = random.randrange(self.area.width - self.rect.width)
         self.rect.top = self.area.top
         self.hp = INITIAL_HP_ENEMY
+        self.missile_number = 0
 
 
     def update(self):
