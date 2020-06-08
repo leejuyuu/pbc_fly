@@ -277,6 +277,15 @@ def main():
             new_boss = enemy.Boss()
             new_boss.add(allsprites, bosses)
 
+        if frame == 200:
+            for a_boss in bosses:
+                a_boss.kill()
+
+
+        if frame == 500 and len(bosses) == 0:
+            new_boss.revival()
+            new_boss.add(allsprites, bosses)
+
         # Boss fires missile
         if not frame % enemy_fire_period:
             for a_boss in bosses:
@@ -297,6 +306,12 @@ def main():
                 plane.hp -= HIT_HP_DROP
                 plane.remove_powerup()
 
+
+        # Check if enemy's missile hit our plane
+        for missile in enemy.Boss_Missile.active:
+            if pygame.sprite.collide_circle(plane, missile):
+                missile.recycle()
+                plane.hp -= HIT_HP_DROP
  
         # Check if our plane's missile hit enemy 
         for missile in Missile.active:
@@ -306,6 +321,7 @@ def main():
                     a_enemy.hp -= HIT_HP_DROP
                 if a_enemy.hp <= 0:
                      a_enemy.kill()
+
                    
 
         # # Check if boss collide with our plane
@@ -313,7 +329,6 @@ def main():
         #     if pygame.sprite.collide_circle(plane, a_boss):
         #         plane.hp -= COLLIDE_HP_DROP
         #         plane.remove_powerup()
-        #         a_boss.kill()
 
 
         # Check if our plane's missile hit boss 

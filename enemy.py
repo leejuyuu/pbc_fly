@@ -50,6 +50,11 @@ class Boss(pygame.sprite.Sprite):
         self.direction = 1
 
 
+    def revival(self):
+        self.hp = INITIAL_HP_BOSS + 60
+        
+
+
     def update(self):
         self.rect = self.rect.move(self.direction * self.speed, 0)
 
