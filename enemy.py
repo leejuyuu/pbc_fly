@@ -10,13 +10,13 @@ import random
 HP_BOSS = 100
 HP_ENEMY = 30
 
+
 # 敵人本身設定
 class Enemy(pygame.sprite.Sprite):
 
     def __init__(self):
         super(Enemy, self).__init__()
         self.image, self.rect = battle.load_image('enemy1.png', colorkey=-1, scale=(32, 34))
-
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()
         self.radius = max(self.rect.width, self.rect.height)
@@ -25,12 +25,27 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.top = self.area.top
         self.hp = HP_ENEMY
         self.missile_number = 0
-
+        self.missile_number = 0
+        self.number_appear = 1
 
     def revival(self):
         global HP_ENEMY
         HP_ENEMY += 20
         self.hp = HP_ENEMY
+
+    def appearnce(self):
+        if self.number_appear % 3 == 1:
+            self.image, self.rect = battle.load_image('enemy1.png', colorkey=-1, scale=(32, 34))
+        elif self.number_appear % 3 == 2:
+            self.image, self.rect = battle.load_image('enemy2.png', colorkey=-1, scale=(32, 34))
+        elif self.number_appear % 3 == 0:
+            self.image, self.rect = battle.load_image('enemy3.png', colorkey=-1, scale=(32, 34))
+
+        screen = pygame.display.get_surface()
+        self.area = screen.get_rect()
+        self.radius = max(self.rect.width, self.rect.height)
+        self.rect.left = random.randrange(self.area.width - self.rect.width)
+        self.rect.top = self.area.top
 
 
     def update(self):
@@ -55,6 +70,7 @@ class Boss(pygame.sprite.Sprite):
         self.rect.top = self.area.top
         self.hp = HP_BOSS
         self.direction = 1
+        self.number_appear = 1
 
 
     def revival(self):
@@ -62,8 +78,15 @@ class Boss(pygame.sprite.Sprite):
         HP_BOSS += 60
         self.hp = HP_BOSS 
 
-        self.image, self.rect = battle.load_image('boss2.png', colorkey=-1, scale=(32, 34))
-        
+
+    def appearnce(self):
+        if self.number_appear % 2 == 0:
+            self.image, self.rect = battle.load_image('boss2.png', colorkey=-1, scale=(64, 68))
+            screen = pygame.display.get_surface()
+            self.area = screen.get_rect()
+            self.radius = max(self.rect.width, self.rect.height)
+            self.rect.left = random.randrange(self.area.width - self.rect.width)
+            self.rect.top = self.area.top        
 
     def update(self):
         self.rect = self.rect.move(self.direction * self.speed, 0)
@@ -73,7 +96,6 @@ class Boss(pygame.sprite.Sprite):
 
         if self.hp <= 0:
             self.kill()
-
 
 
 # 魔王射出的飛彈
