@@ -16,6 +16,7 @@ HIT_HP_DROP = 10
 COLLIDE_HP_DROP = 20
 IMG_DIR = Path(__file__).resolve().parent / 'img'
 
+
 # functions to create our resources
 def load_image(name, colorkey=None, scale=None):
     path = IMG_DIR / name
@@ -209,9 +210,13 @@ def main():
     fire_period = 20
     enemy_fire_period = 120
     fire_wait = 20
-    clock = pygame.time.Clock()
+    mark = False # to identify whether enemy adds hp after 1 boss is defeated (enemy level up)
+    initial_boss_appearance = True # to identify the first appearance of boss
 
+
+    clock = pygame.time.Clock()
     frame = 0
+    
     while True:
         frame += 1  # Loop counter
         clock.tick(60)  # Max FPS = 60
@@ -245,10 +250,16 @@ def main():
         if hp_pack not in allsprites and random.random() <= HP_PACK_PROB:
             hp_pack.appear()
 
-        # Enemy's apperance
+
+        # Enemy's further appearnce
         if not frame % 100:
-            new_enemy = enemy.Enemy()
-            new_enemy.add(allsprites, enemies)
+            if len(bosses) == 0:
+                new_enemy = enemy.Enemy()
+                if mark == True: # enemy's hp increases since player has entered next level
+                    new_enemy.revival()
+                    mark = False
+                new_enemy.add(allsprites, enemies)
+
 
         # Enemy fires missile
         if not frame % enemy_fire_period:
@@ -272,24 +283,21 @@ def main():
             plane.hp += HP_INCREMENT
             hp_pack.kill()
 
-        # Boss' apperance 
-        if frame == 100:
-            new_boss = enemy.Boss()
-            new_boss.add(allsprites, bosses)
-
-        if frame == 200:
-            for a_boss in bosses:
-                a_boss.kill()
-
-
-        if frame == 500 and len(bosses) == 0:
-            new_boss.revival()
-            new_boss.add(allsprites, bosses)
+       
+        # Boss' appearnce
+        if not frame % 900:
+            if len(bosses) == 0:
+                for a_enemy in enemies:
+                    a_enemy.kill()
+                new_boss = enemy.Boss()
+                if initial_boss_appearance == False: # Boss has already appeared more than 1 time
+                    new_boss.revival() # boss' hp increases       
+                new_boss.add(allsprites, bosses)
 
         # Boss fires missile
         if not frame % enemy_fire_period:
             for a_boss in bosses:
-                enemy.Boss_Missile.position(a_boss.rect.midbottom, 5)
+                enemy.Boss_Missile.position(a_boss.rect.midbottom, 3)
     
         # Check if enemy collide with our plane
         for a_enemy in enemies:
@@ -307,11 +315,12 @@ def main():
                 plane.remove_powerup()
 
 
-        # Check if enemy's missile hit our plane
+        # Check if boss's missile hit our plane
         for missile in enemy.Boss_Missile.active:
             if pygame.sprite.collide_circle(plane, missile):
                 missile.recycle()
                 plane.hp -= HIT_HP_DROP
+                plane.remove_powerup()
  
         # Check if our plane's missile hit enemy 
         for missile in Missile.active:
@@ -322,13 +331,12 @@ def main():
                 if a_enemy.hp <= 0:
                      a_enemy.kill()
 
-                   
 
-        # # Check if boss collide with our plane
-        # for a_boss in bosses:
-        #     if pygame.sprite.collide_circle(plane, a_boss):
-        #         plane.hp -= COLLIDE_HP_DROP
-        #         plane.remove_powerup()
+        # Check if boss collide with our plane
+        for a_boss in bosses:
+            if pygame.sprite.collide_circle(plane, a_boss):
+                plane.hp -= COLLIDE_HP_DROP
+                plane.remove_powerup()
 
 
         # Check if our plane's missile hit boss 
@@ -338,7 +346,10 @@ def main():
                     missile.recycle()
                     a_boss.hp -= HIT_HP_DROP
                 if a_boss.hp <= 0:
-                     a_boss.kill()
+                    a_boss.kill()
+                    mark = True # player entering next level
+                    initial_boss_appearance = False # launch revival method every time a new boss appears
+
                     
         # End the game if the HP goes to 0
         if plane.hp <= 0:

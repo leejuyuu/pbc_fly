@@ -6,8 +6,9 @@ from typing import Tuple
 import battle
 import random
 
-INITIAL_HP_ENEMY = 30
-INITIAL_HP_BOSS = 60
+
+HP_BOSS = 100
+HP_ENEMY = 30
 
 # 敵人本身設定
 class Enemy(pygame.sprite.Sprite):
@@ -22,8 +23,14 @@ class Enemy(pygame.sprite.Sprite):
         self.speed = 2
         self.rect.left = random.randrange(self.area.width - self.rect.width)
         self.rect.top = self.area.top
-        self.hp = INITIAL_HP_ENEMY
+        self.hp = HP_ENEMY
         self.missile_number = 0
+
+
+    def revival(self):
+        global HP_ENEMY
+        HP_ENEMY += 20
+        self.hp = HP_ENEMY
 
 
     def update(self):
@@ -46,21 +53,23 @@ class Boss(pygame.sprite.Sprite):
         self.speed = 1.5
         self.rect.left = random.randrange(self.area.width - self.rect.width)
         self.rect.top = self.area.top
-        self.hp = INITIAL_HP_BOSS
+        self.hp = HP_BOSS
         self.direction = 1
 
 
     def revival(self):
-        self.hp = INITIAL_HP_BOSS + 60
-        
+        global HP_BOSS
+        HP_BOSS += 60
+        self.hp = HP_BOSS 
 
+        self.image, self.rect = battle.load_image('boss2.png', colorkey=-1, scale=(32, 34))
+        
 
     def update(self):
         self.rect = self.rect.move(self.direction * self.speed, 0)
 
         if not (self.area.right >= self.rect.right and self.rect.left >= self.area.left):
             self.direction *= -1
-      
 
         if self.hp <= 0:
             self.kill()
