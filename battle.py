@@ -291,20 +291,9 @@ def main():
             plane.hp += HP_INCREMENT
             hp_pack.kill()
 
-        # Boss' initial appearnce
-        if frame == 1200: # first boss appears after 20 seconds
-            for a_enemy in enemies:
-                a_enemy.kill()
-            new_boss = enemy.Boss()
-            new_boss.number_appear = boss_number_appear
-            new_boss.appearnce() # determine the image it appears
-            new_boss.add(allsprites, bosses)
 
-        # Boss' further appearnce
-        if frame == frame_record + 1200: # another boss appears 20 seconds after the previous one is defeated
-            if len(bosses) == 0:
-                for a_enemy in enemies:
-                    a_enemy.kill()
+        # Boss' appearnce
+        if frame == frame_record + 1500: # another boss appears 25 seconds after the previous one is defeated
                 new_boss = enemy.Boss()
                 new_boss.number_appear = boss_number_appear
                 new_boss.appearnce() # determine the image it appears
