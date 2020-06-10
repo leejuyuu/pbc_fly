@@ -376,7 +376,7 @@ def main():
             break
 
         allsprites.update()
-        score_text = score_font.render('Score : %s' % str(score), True, (225, 225, 225))
+        score_text = score_font.render('Score : %s' % str(int(score)), True, (225, 225, 225))
 
         # Draw Everything
         screen.blit(background, (0, background1_rect.y))
