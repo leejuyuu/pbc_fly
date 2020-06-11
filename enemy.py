@@ -1,10 +1,10 @@
 """
 敵人機制
 """
-import pygame 
-from typing import Tuple
-import battle
 import random
+from typing import Tuple
+import pygame
+import battle
 
 
 HP_BOSS = 100
@@ -24,7 +24,6 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.left = random.randrange(self.area.width - self.rect.width)
         self.rect.top = self.area.top
         self.hp = HP_ENEMY
-        self.missile_number = 0
         self.missile_number = 0
         self.number_appear = 1
 
@@ -76,7 +75,7 @@ class Boss(pygame.sprite.Sprite):
     def revival(self):
         global HP_BOSS
         HP_BOSS += 60
-        self.hp = HP_BOSS 
+        self.hp = HP_BOSS
 
 
     def appearnce(self):
@@ -86,7 +85,7 @@ class Boss(pygame.sprite.Sprite):
             self.area = screen.get_rect()
             self.radius = max(self.rect.width, self.rect.height)
             self.rect.left = random.randrange(self.area.width - self.rect.width)
-            self.rect.top = self.area.top        
+            self.rect.top = self.area.top
 
     def update(self):
         self.rect = self.rect.move(self.direction * self.speed, 0)
@@ -164,6 +163,3 @@ class Enemy_Missile(pygame.sprite.Sprite):
         self.rect = self.rect.move(0, 2 * self.speed) # 敵人移動速度
         if self.rect.bottom > self.area.bottom:
             self.recycle()
-
-
-

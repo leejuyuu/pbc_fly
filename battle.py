@@ -221,7 +221,7 @@ def main():
 
     clock = pygame.time.Clock()
     frame = 0
-    
+
     while True:
         frame += 1  # Loop counter
         clock.tick(60)  # Max FPS = 60
@@ -262,7 +262,7 @@ def main():
                 new_enemy = enemy.Enemy()
                 new_enemy.number_appear = boss_number_appear
                 new_enemy.appearnce() # determine the image it appears
-                
+
                 if mark == True: # enemy's hp increases since player has entered next level
                     new_enemy.revival()
                     mark = False
@@ -294,19 +294,19 @@ def main():
 
         # Boss' appearnce
         if frame == frame_record + 1500: # another boss appears 25 seconds after the previous one is defeated
-                new_boss = enemy.Boss()
-                new_boss.number_appear = boss_number_appear
-                new_boss.appearnce() # determine the image it appears
-                
-                if initial_boss_appear == False: # Boss has already appeared more than 1 time
-                    new_boss.revival() # boss' hp increases       
-                new_boss.add(allsprites, bosses)
+            new_boss = enemy.Boss()
+            new_boss.number_appear = boss_number_appear
+            new_boss.appearnce() # determine the image it appears
+
+            if initial_boss_appear == False: # Boss has already appeared more than 1 time
+                new_boss.revival() # boss' hp increases
+            new_boss.add(allsprites, bosses)
 
         # Boss fires missile
         if not frame % enemy_fire_period:
             for a_boss in bosses:
                 enemy.Boss_Missile.position(a_boss.rect.midbottom, 3)
-    
+
         # Check if enemy collide with our plane
         for a_enemy in enemies:
             if pygame.sprite.collide_circle(plane, a_enemy):
@@ -329,8 +329,8 @@ def main():
                 missile.recycle()
                 plane.hp -= HIT_HP_DROP
                 plane.remove_powerup()
- 
-        # Check if our plane's missile hit enemy 
+
+        # Check if our plane's missile hit enemy
         for missile in Missile.active:
             for a_enemy in enemies:
                 if pygame.sprite.collide_circle(a_enemy, missile):
@@ -346,7 +346,7 @@ def main():
                 plane.remove_powerup()
 
 
-        # Check if our plane's missile hit boss 
+        # Check if our plane's missile hit boss
         for missile in Missile.active:
             for a_boss in bosses:
                 if pygame.sprite.collide_circle(a_boss, missile):
