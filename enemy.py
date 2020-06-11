@@ -19,7 +19,7 @@ class Enemy(pygame.sprite.Sprite):
         self.image, self.rect = battle.load_image('enemy1.png', colorkey=-1, scale=(32, 34))
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()
-        self.radius = max(self.rect.width, self.rect.height)
+        self.radius = max(self.rect.width, self.rect.height) / 2
         self.speed = 2
         self.rect.left = random.randrange(self.area.width - self.rect.width)
         self.rect.top = self.area.top
@@ -63,7 +63,7 @@ class Boss(pygame.sprite.Sprite):
         self.image, self.rect = battle.load_image('boss1.png', colorkey=-1, scale=(64, 68))
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()
-        self.radius = max(self.rect.width, self.rect.height)
+        self.radius = max(self.rect.width, self.rect.height) / 2
         self.speed = 1.5
         self.rect.left = random.randrange(self.area.width - self.rect.width)
         self.rect.top = self.area.top
