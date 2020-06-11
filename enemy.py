@@ -7,7 +7,7 @@ import pygame
 import battle
 
 
-HP_BOSS = 100
+HP_BOSS = 200
 HP_ENEMY = 30
 
 
@@ -29,7 +29,7 @@ class Enemy(pygame.sprite.Sprite):
 
     def revival(self):
         global HP_ENEMY
-        HP_ENEMY += 20
+        HP_ENEMY += 10
         self.hp = HP_ENEMY
 
     def appearnce(self):
@@ -74,7 +74,7 @@ class Boss(pygame.sprite.Sprite):
 
     def revival(self):
         global HP_BOSS
-        HP_BOSS += 60
+        HP_BOSS += 80
         self.hp = HP_BOSS
 
 
