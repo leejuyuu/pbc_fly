@@ -241,6 +241,7 @@ def main():
 
     while True:
         frame += 1  # Loop counter
+        score += 1/30
         clock.tick(60)  # Max FPS = 60
 
         # Event handling
