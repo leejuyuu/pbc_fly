@@ -173,6 +173,21 @@ class HpPack(FallingItem):
         self.image, self.rect = load_image('hp_pack.png', colorkey=-1, scale=(25, 25))
 
 
+class HpBar():
+    def __init__(self, tracking_object: Plane):
+        self.tracking_object = tracking_object
+        self.screen = pygame.display.get_surface()
+        self.width = 160
+        self.height = 15
+        self.x = 5
+        self.y = 620
+
+    def draw(self):
+        pygame.draw.rect(self.screen, (0, 0, 150), [self.x - 3, self.y - 3, self.width + 6, self.height + 6])
+        pygame.draw.rect(self.screen, (130, 0, 0), [self.x, self.y, self.width, self.height])
+        pygame.draw.rect(self.screen, (200, 0, 0), [self.x, self.y, self.tracking_object.hp, self.height])
+
+
 def main():
     """This is the main function."""
     pygame.init()
@@ -184,10 +199,6 @@ def main():
     background1_rect = pygame.Rect(0, 0, 480, 640)
     background2_rect = pygame.Rect(0, 0, 480, 640)
 
-    barW = 160
-    barH = 15
-    bloodx = 5
-    bloody = 620
 
     score = 0
     score_font = pygame.font.SysFont('arial', 25)
@@ -210,6 +221,7 @@ def main():
 
     hp_pack = HpPack()
     powerup = PowerUp()
+    hp_bar = HpBar(plane)
     fire_period = 20
     enemy_fire_period = 120
     fire_wait = 20
@@ -373,9 +385,7 @@ def main():
         # Draw Everything
         screen.blit(background, (0, background1_rect.y))
         screen.blit(background, (0, background2_rect.y))
-        pygame.draw.rect(screen, (0, 0, 150), [bloodx - 3, bloody - 3, INITIAL_HP + 6, barH + 6])
-        pygame.draw.rect(screen, (130, 0, 0), [bloodx, bloody, INITIAL_HP, barH])
-        pygame.draw.rect(screen, (200, 0, 0), [bloodx, bloody, plane.hp, barH])
+        hp_bar.draw()
         screen.blit(score_text, (10, 5))
         allsprites.draw(screen)
         pygame.display.flip()
