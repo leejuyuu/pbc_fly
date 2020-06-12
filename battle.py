@@ -9,9 +9,10 @@ import pygame
 import enemy
 
 
+# Constants to control gameplay and hardness
 SCROLLING_SPEED = 2
 INITIAL_HP = 160
-HP_INCREMENT = 10
+HP_INCREMENT = 40
 HP_PACK_PROB = 0.001
 POWER_UP_PROB = 0.001
 HIT_HP_DROP = 10
