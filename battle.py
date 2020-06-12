@@ -183,9 +183,12 @@ class HpBar():
         self.y = 620
 
     def draw(self):
-        pygame.draw.rect(self.screen, (0, 0, 150), [self.x - 3, self.y - 3, self.width + 6, self.height + 6])
-        pygame.draw.rect(self.screen, (130, 0, 0), [self.x, self.y, self.width, self.height])
-        pygame.draw.rect(self.screen, (200, 0, 0), [self.x, self.y, self.tracking_object.hp, self.height])
+        pygame.draw.rect(self.screen, (0, 0, 150),
+                         [self.x - 3, self.y - 3, self.width + 6, self.height + 6])
+        pygame.draw.rect(self.screen, (130, 0, 0),
+                         [self.x, self.y, self.width, self.height])
+        pygame.draw.rect(self.screen, (200, 0, 0),
+                         [self.x, self.y, self.tracking_object.hp, self.height])
 
 
 def main():
@@ -276,7 +279,7 @@ def main():
                 new_enemy.number_appear = boss_number_appear
                 new_enemy.appearnce() # determine the image it appears
 
-                if mark == True: # enemy's hp increases since player has entered next level
+                if mark: # enemy's hp increases since player has entered next level
                     new_enemy.revival()
                     mark = False
                 new_enemy.add(allsprites, enemies)
@@ -304,14 +307,13 @@ def main():
             plane.hp += HP_INCREMENT
             hp_pack.kill()
 
-
-        # Boss' appearnce
-        if frame == frame_record + 1500: # another boss appears 25 seconds after the previous one is defeated
+        # Another boss appears 25 seconds after the previous one is defeated
+        if frame == frame_record + 1500:
             new_boss = enemy.Boss()
             new_boss.number_appear = boss_number_appear
             new_boss.appearnce() # determine the image it appears
 
-            if initial_boss_appear == False: # Boss has already appeared more than 1 time
+            if not initial_boss_appear: # Boss has already appeared more than 1 time
                 new_boss.revival() # boss' hp increases
             new_boss.add(allsprites, bosses)
 
@@ -350,8 +352,8 @@ def main():
                     missile.recycle()
                     a_enemy.hp -= HIT_HP_DROP
                 if a_enemy.hp <= 0:
-                     score += 40
-                     a_enemy.kill()
+                    score += 40
+                    a_enemy.kill()
 
         # Check if boss collide with our plane
         for a_boss in bosses:
