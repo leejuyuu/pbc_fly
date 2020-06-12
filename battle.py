@@ -352,9 +352,7 @@ def main():
                 if pygame.sprite.collide_circle(a_enemy, missile):
                     missile.recycle()
                     a_enemy.hp -= HIT_HP_DROP
-                if a_enemy.hp <= 0:
-                    score += 40
-                    a_enemy.kill()
+
 
         # Check if boss collide with our plane
         for a_boss in bosses:
