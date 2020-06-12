@@ -9,6 +9,7 @@ import pygame
 import enemy
 
 
+SCROLLING_SPEED = 2
 INITIAL_HP = 160
 HP_INCREMENT = 10
 HP_PACK_PROB = 0.001
@@ -52,7 +53,7 @@ class Plane(pygame.sprite.Sprite):
         self.radius = max(self.rect.width, self.rect.height) // 2
         self.vert = 0
         self.horiz = 0
-        self.speed = 1
+        self.speed = 2
         self.hp = INITIAL_HP
         self.power = 0
 
@@ -142,7 +143,7 @@ class FallingItem(pygame.sprite.Sprite):
         super().__init__()
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()
-        self.speed = 1
+        self.speed = SCROLLING_SPEED
 
     def appear(self, position: int = None):
         self.rect.top = self.area.top
@@ -233,7 +234,7 @@ def main():
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 return
 
-        background1_rect.y += 1
+        background1_rect.y += SCROLLING_SPEED
         if background2_rect.y + background1_rect.y > 640:
             background1_rect.y = 0
         background2_rect.bottom = background1_rect.y
