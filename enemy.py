@@ -101,7 +101,7 @@ class Boss_Missile(pygame.sprite.Sprite):
 
     def __init__(self):
         super().__init__()
-        self.image, self.rect = battle.load_image('bullet.png', colorkey=-1, scale=(5, 20))
+        self.image, self.rect = battle.load_image('bullet_enemy.png', colorkey=-1, scale=(5, 21))
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()
         self.speed = 1.5
@@ -135,7 +135,7 @@ class Enemy_Missile(pygame.sprite.Sprite):
 
     def __init__(self):
         super().__init__()
-        self.image, self.rect = battle.load_image('bullet.png', colorkey=-1, scale=(5, 20))
+        self.image, self.rect = battle.load_image('bullet_enemy.png', colorkey=-1, scale=(5, 21))
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()
         self.speed = 2
