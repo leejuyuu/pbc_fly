@@ -233,7 +233,6 @@ def main():
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 return
 
-        score += 1/30
         background1_rect.y += 1
         if background2_rect.y + background1_rect.y > 640:
             background1_rect.y = 0
@@ -337,6 +336,7 @@ def main():
                     missile.recycle()
                     a_enemy.hp -= HIT_HP_DROP
                 if a_enemy.hp <= 0:
+                     score += 40
                      a_enemy.kill()
 
         # Check if boss collide with our plane
@@ -353,6 +353,7 @@ def main():
                     missile.recycle()
                     a_boss.hp -= HIT_HP_DROP
                 if a_boss.hp <= 0:
+                    score += 200
                     a_boss.kill()
                     mark = True # player entering next level
                     initial_boss_appear = False # launch revival method every time a new boss appears
