@@ -294,9 +294,10 @@ def main():
 
         if not frame % fire_wait:
             for a_enemy in enemies:
-                if a_enemy.missile_number:
-                    a_enemy.missile_number -= 1
-                    enemy.Enemy_Missile.position(a_enemy.rect.midbottom)
+                if a_enemy.status == 'alive':  # avoid firing while enemies are dead
+                    if a_enemy.missile_number:
+                        a_enemy.missile_number -= 1
+                        enemy.Enemy_Missile.position(a_enemy.rect.midbottom)
 
         # Increase missiles fired at once if collided with powerup item
         if powerup in allsprites and pygame.sprite.collide_rect(plane, powerup):
@@ -352,6 +353,8 @@ def main():
                 if pygame.sprite.collide_circle(a_enemy, missile):
                     missile.recycle()
                     a_enemy.hp -= HIT_HP_DROP
+                if (a_enemy.hp <= 0) and (a_enemy.status == 'alive'):
+                    score += 40
 
 
         # Check if boss collide with our plane

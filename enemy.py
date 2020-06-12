@@ -26,6 +26,7 @@ class Enemy(pygame.sprite.Sprite):
         self.hp = HP_ENEMY
         self.missile_number = 0
         self.number_appear = 1
+        self.status = 'alive'
 
     def revival(self):
         global HP_ENEMY
@@ -51,7 +52,24 @@ class Enemy(pygame.sprite.Sprite):
         self.rect = self.rect.move(0, 1.5 * self.speed)
 
         if self.hp <= 0:
-            self.kill()
+            if self.status == 'ash': # adj
+                self.kill()
+            if self.status == 'ex':  # adj
+                left = self.rect.left
+                top = self.rect.top
+                self.image, self.rect = battle.load_image('enemy_ash.png', colorkey=-1, scale=(32, 34))
+                screen = pygame.display.get_surface()
+                self.rect.left = left
+                self.rect.top = top
+                self.status = 'ash'
+            if (self.hp <= 0) and (self.status == 'alive'):
+                left = self.rect.left  # 記住飛機爆炸的位子
+                top = self.rect.top
+                self.image, self.rect = battle.load_image('enemy1_ex.png', colorkey=-1, scale=(32, 34))
+                screen = pygame.display.get_surface()
+                self.rect.left = left
+                self.rect.top = top
+                self.status = 'ex'
 
         if self.rect.bottom > self.area.bottom:
             self.kill()
