@@ -228,7 +228,7 @@ def main():
     hp_bar = HpBar(plane)
     fire_period = 20
     enemy_fire_period = 120
-    fire_wait = 20
+    fire_wait = 25
 
     mark = False # to identify whether enemy adds hp after 1 boss is defeated (enemy level up)
     initial_boss_appear = True # to identify the first appearance of boss
