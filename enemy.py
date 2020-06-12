@@ -82,14 +82,16 @@ class Boss(pygame.sprite.Sprite):
 
 
     def appearnce(self):
-        if self.number_appear % 4 == 1:
+        if self.number_appear % 5 == 1:
             self.image, self.rect = battle.load_image('boss1.png', colorkey=-1, scale=(64, 68))
-        elif self.number_appear % 4 == 2:
+        elif self.number_appear % 5 == 2:
             self.image, self.rect = battle.load_image('boss2.png', colorkey=-1, scale=(64, 68))
-        elif self.number_appear % 4 == 3:
+        elif self.number_appear % 5 == 3:
             self.image, self.rect = battle.load_image('boss3.png', colorkey=-1, scale=(64, 68))
-        elif self.number_appear % 4 == 0:
+        elif self.number_appear % 5 == 4:
             self.image, self.rect = battle.load_image('boss4.png', colorkey=-1, scale=(64, 68))
+        elif self.number_appear % 5 == 0:
+            self.image, self.rect = battle.load_image('boss5.png', colorkey=-1, scale=(64, 68))
 
 
         self.radius = max(self.rect.width, self.rect.height)
@@ -174,7 +176,7 @@ class Enemy_Missile(pygame.sprite.Sprite):
         if self.rect.bottom > self.area.bottom:
             self.recycle()
 
-
+# 死掉時的爆炸畫面
 class Explosion(pygame.sprite.Sprite):
     pool = pygame.sprite.Group()
     active = pygame.sprite.Group()
