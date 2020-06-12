@@ -52,9 +52,9 @@ class Enemy(pygame.sprite.Sprite):
         self.rect = self.rect.move(0, 1.5 * self.speed)
 
         if self.hp <= 0:
-            if self.status == 'ash': # adj
+            if self.status == 'ash': # 飛機變成灰燼
                 self.kill()
-            if self.status == 'ex':  # adj
+            if self.status == 'ex':  # 飛機變成爆炸畫面
                 left = self.rect.left
                 top = self.rect.top
                 self.image, self.rect = battle.load_image('enemy_ash.png', colorkey=-1, scale=(32, 34))
@@ -65,7 +65,7 @@ class Enemy(pygame.sprite.Sprite):
             if (self.hp <= 0) and (self.status == 'alive'):
                 left = self.rect.left  # 記住飛機爆炸的位子
                 top = self.rect.top
-                self.image, self.rect = battle.load_image('enemy1_ex.png', colorkey=-1, scale=(32, 34))
+                self.image, self.rect = battle.load_image('enemy_ex.png', colorkey=-1, scale=(32, 34))
                 screen = pygame.display.get_surface()
                 self.rect.left = left
                 self.rect.top = top
