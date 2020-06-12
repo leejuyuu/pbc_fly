@@ -27,7 +27,6 @@ class Enemy(pygame.sprite.Sprite):
         self.hp = self.initial_hp
         self.missile_number = 0
         self.number_appear = 1
-        self.status = 'alive'
 
     def revival(self):
         Enemy.initial_hp += 10
@@ -52,24 +51,8 @@ class Enemy(pygame.sprite.Sprite):
         self.rect = self.rect.move(0, 1.5 * self.speed)
 
         if self.hp <= 0:
-            if self.status == 'ash': # 飛機變成灰燼
-                self.kill()
-            if self.status == 'ex':  # 飛機變成爆炸畫面
-                left = self.rect.left
-                top = self.rect.top
-                self.image, self.rect = battle.load_image('enemy_ash.png', colorkey=-1, scale=(32, 34))
-                screen = pygame.display.get_surface()
-                self.rect.left = left
-                self.rect.top = top
-                self.status = 'ash'
-            if (self.hp <= 0) and (self.status == 'alive'):
-                left = self.rect.left  # 記住飛機爆炸的位子
-                top = self.rect.top
-                self.image, self.rect = battle.load_image('enemy_ex.png', colorkey=-1, scale=(32, 34))
-                screen = pygame.display.get_surface()
-                self.rect.left = left
-                self.rect.top = top
-                self.status = 'ex'
+            Explosion.position(self.rect.center)
+            self.kill()
 
         if self.rect.bottom > self.area.bottom:
             self.kill()
@@ -181,3 +164,43 @@ class Enemy_Missile(pygame.sprite.Sprite):
         self.rect = self.rect.move(0, 2 * self.speed) # 敵人移動速度
         if self.rect.bottom > self.area.bottom:
             self.recycle()
+
+
+class Explosion(pygame.sprite.Sprite):
+    pool = pygame.sprite.Group()
+    active = pygame.sprite.Group()
+
+    def __init__(self):
+        super().__init__()
+        self.explode_image, _ = battle.load_image('enemy_ex.png', colorkey=-1, scale=(32, 34))
+        self.ash_image, self.rect = battle.load_image('enemy_ash.png', colorkey=-1, scale=(32, 34))
+        self.image = self.explode_image
+        screen = pygame.display.get_surface()
+        self.area = screen.get_rect()
+        self.speed = 2
+        self.remaining_time = 0
+
+    @classmethod
+    def position(cls, location: Tuple[int, int], num: int = 1):
+        if len(cls.pool) < num:
+            cls.pool.add([Explosion() for _ in range(num)])
+        explosion = cls.pool.sprites()[0]
+        explosion.add(cls.allsprites, cls.active)
+        explosion.remove(cls.pool)
+        explosion.rect.center = location
+        explosion.image = explosion.explode_image
+        explosion.remaining_time = 7
+
+
+    def recycle(self):
+        self.add(self.pool)
+        self.remove(self.allsprites, self.active)
+
+    def update(self):
+        if not self.remaining_time:
+            self.recycle()
+            return
+        self.remaining_time -= 1
+        self.rect = self.rect.move(0, 2 * self.speed) # 敵人移動速度
+        if self.remaining_time == 1:
+            self.image = self.ash_image
