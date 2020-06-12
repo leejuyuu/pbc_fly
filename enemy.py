@@ -13,6 +13,7 @@ HP_ENEMY = 30
 
 # 敵人本身設定
 class Enemy(pygame.sprite.Sprite):
+    initial_hp = HP_ENEMY
 
     def __init__(self):
         super(Enemy, self).__init__()
@@ -23,15 +24,14 @@ class Enemy(pygame.sprite.Sprite):
         self.speed = 2
         self.rect.left = random.randrange(self.area.width - self.rect.width)
         self.rect.top = self.area.top
-        self.hp = HP_ENEMY
+        self.hp = self.initial_hp
         self.missile_number = 0
         self.number_appear = 1
         self.status = 'alive'
 
     def revival(self):
-        global HP_ENEMY
-        HP_ENEMY += 10
-        self.hp = HP_ENEMY
+        Enemy.initial_hp += 10
+        self.hp = self.initial_hp
 
     def appearnce(self):
         if self.number_appear % 3 == 1:
@@ -76,6 +76,7 @@ class Enemy(pygame.sprite.Sprite):
 
 # 魔王本身設定
 class Boss(pygame.sprite.Sprite):
+    initial_hp = HP_BOSS
     def __init__(self):
         super(Boss, self).__init__()
         self.image, self.rect = battle.load_image('boss1.png', colorkey=-1, scale=(64, 68))
@@ -91,9 +92,8 @@ class Boss(pygame.sprite.Sprite):
 
 
     def revival(self):
-        global HP_BOSS
-        HP_BOSS += 80
-        self.hp = HP_BOSS
+        Boss.initial_hp += 80
+        self.hp = self.initial_hp
 
 
     def appearnce(self):
