@@ -9,6 +9,7 @@ import battle
 
 HP_BOSS = 200
 HP_ENEMY = 30
+FIRE_WAIT = 25
 
 
 # 敵人本身設定
@@ -31,6 +32,7 @@ class Enemy(pygame.sprite.Sprite):
         self.number_appear = 1
         self.direction = 1
         self.frame = 0
+        self.fire_count_down = 0
 
     def revival(self):
         Enemy.initial_hp += 10
@@ -61,6 +63,23 @@ class Enemy(pygame.sprite.Sprite):
 
         if self.rect.bottom > self.area.bottom:
             self.kill()
+        if self.missile_number > 0 and self.fire_count_down == 0:
+            self._fire()
+        if self.fire_count_down > 0:
+            self.fire_count_down -= 1
+
+
+    def fire(self):
+        self.missile_number = 3
+        self._fire()
+
+    def _fire(self):
+        if self.missile_number > 0:
+            Enemy_Missile.position(self.rect.midbottom)
+            self.missile_number -= 1
+            self.fire_count_down = FIRE_WAIT
+
+
 
 # 魔王本身設定
 class Boss(pygame.sprite.Sprite):
