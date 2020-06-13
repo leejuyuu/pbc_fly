@@ -253,13 +253,16 @@ def main():
 
     # Add boss group
     bosses = pygame.sprite.Group()
+   
 
     hp_pack = HpPack()
     powerup = PowerUp()
     hp_bar = HpBar(plane)
     fire_period = 20
     enemy_fire_period = 120
+    boss_fire_period = 70
     fire_wait = 25
+
 
     mark = False # to identify whether enemy adds hp after 1 boss is defeated (enemy level up)
     initial_boss_appear = True # to identify the first appearance of boss
@@ -351,7 +354,7 @@ def main():
             new_boss.add(allsprites, bosses)
 
         # Boss fires missile
-        if not frame % enemy_fire_period:
+        if not frame % boss_fire_period:
             for a_boss in bosses:
                 enemy.Enemy_Missile.position(a_boss.rect.midbottom, 3)
 

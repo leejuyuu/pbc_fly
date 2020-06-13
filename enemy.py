@@ -85,8 +85,8 @@ class Boss(pygame.sprite.Sprite):
 
 
     def appearnce(self):
-        # if self.number_appear % 5 == 1:
-        #     self.image, self.rect = battle.load_image('boss1.png', colorkey=-1, scale=(96, 102))
+        if self.number_appear % 5 == 1:
+            self.image, self.rect = battle.load_image('boss1.png', colorkey=-1, scale=(96, 102))
         if self.number_appear % 5 == 2:
             self.image, self.rect = battle.load_image('boss2.png', colorkey=-1, scale=(96, 102))
         elif self.number_appear % 5 == 3:
@@ -109,6 +109,7 @@ class Boss(pygame.sprite.Sprite):
             self.direction *= -1
 
         if self.hp <= 0:
+            Explosion.position(self.rect.center)
             self.kill()
 
 
