@@ -272,7 +272,9 @@ def main():
 
     # Add boss group
     bosses = pygame.sprite.Group()
-   
+    enemy.Boss.all_images = [load_image('boss{}.png'.format(i),
+                                        colorkey=-1,
+                                        scale=(96, 102))[0] for i in range(1, 6)]
 
     hp_pack = HpPack()
     powerup = PowerUp()

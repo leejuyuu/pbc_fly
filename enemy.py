@@ -116,9 +116,11 @@ class Enemy(pygame.sprite.Sprite):
 # 魔王本身設定
 class Boss(pygame.sprite.Sprite):
     initial_hp = HP_BOSS
+    all_images = []
     def __init__(self):
         super(Boss, self).__init__()
-        self.image, self.rect = battle.load_image('boss1.png', colorkey=-1, scale=(96, 102))
+        self.image = self.all_images[0]
+        self.rect = self.image.get_rect()
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()
         self.radius = max(self.rect.width, self.rect.height) / 2
@@ -136,19 +138,9 @@ class Boss(pygame.sprite.Sprite):
 
 
     def appearnce(self):
-        if self.number_appear % 5 == 1:
-            self.image, self.rect = battle.load_image('boss1.png', colorkey=-1, scale=(96, 102))
-        if self.number_appear % 5 == 2:
-            self.image, self.rect = battle.load_image('boss2.png', colorkey=-1, scale=(96, 102))
-        elif self.number_appear % 5 == 3:
-            self.image, self.rect = battle.load_image('boss3.png', colorkey=-1, scale=(96, 102))
-        elif self.number_appear % 5 == 4:
-            self.image, self.rect = battle.load_image('boss4.png', colorkey=-1, scale=(96, 102))
-        elif self.number_appear % 5 == 0:
-            self.image, self.rect = battle.load_image('boss5.png', colorkey=-1, scale=(96, 102))
+        self.image = self.all_images[self.number_appear % 5 -1]
+        self.rect = self.image.get_rect()
 
-
-        self.radius = max(self.rect.width, self.rect.height)
         self.rect.left = random.randrange(self.area.width - self.rect.width)
         self.rect.top = self.area.top
 
