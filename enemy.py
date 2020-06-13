@@ -27,6 +27,7 @@ class Enemy(pygame.sprite.Sprite):
         self.hp = self.initial_hp
         self.missile_number = 0
         self.number_appear = 1
+        self.direction = 1
 
     def revival(self):
         Enemy.initial_hp += 10
@@ -50,7 +51,10 @@ class Enemy(pygame.sprite.Sprite):
 
 
     def update(self):
-        self.rect = self.rect.move(0, 1.5 * self.speed)
+        self.rect = self.rect.move(0.8 * self.direction * self.speed, 0.8 * self.speed)
+
+        if not (self.area.right >= self.rect.right and self.rect.left >= self.area.left):
+            self.direction *= -1
 
         if self.hp <= 0:
             Explosion.position(self.rect.center)
@@ -64,7 +68,7 @@ class Boss(pygame.sprite.Sprite):
     initial_hp = HP_BOSS
     def __init__(self):
         super(Boss, self).__init__()
-        self.image, self.rect = battle.load_image('boss1.png', colorkey=-1, scale=(64, 68))
+        self.image, self.rect = battle.load_image('boss1.png', colorkey=-1, scale=(96, 102))
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()
         self.radius = max(self.rect.width, self.rect.height) / 2
@@ -82,16 +86,16 @@ class Boss(pygame.sprite.Sprite):
 
 
     def appearnce(self):
-        if self.number_appear % 5 == 1:
-            self.image, self.rect = battle.load_image('boss1.png', colorkey=-1, scale=(64, 68))
-        elif self.number_appear % 5 == 2:
-            self.image, self.rect = battle.load_image('boss2.png', colorkey=-1, scale=(64, 68))
+        # if self.number_appear % 5 == 1:
+        #     self.image, self.rect = battle.load_image('boss1.png', colorkey=-1, scale=(96, 102))
+        if self.number_appear % 5 == 2:
+            self.image, self.rect = battle.load_image('boss2.png', colorkey=-1, scale=(96, 102))
         elif self.number_appear % 5 == 3:
-            self.image, self.rect = battle.load_image('boss3.png', colorkey=-1, scale=(64, 68))
+            self.image, self.rect = battle.load_image('boss3.png', colorkey=-1, scale=(96, 102))
         elif self.number_appear % 5 == 4:
-            self.image, self.rect = battle.load_image('boss4.png', colorkey=-1, scale=(64, 68))
+            self.image, self.rect = battle.load_image('boss4.png', colorkey=-1, scale=(96, 102))
         elif self.number_appear % 5 == 0:
-            self.image, self.rect = battle.load_image('boss5.png', colorkey=-1, scale=(64, 68))
+            self.image, self.rect = battle.load_image('boss5.png', colorkey=-1, scale=(96, 102))
 
 
         self.radius = max(self.rect.width, self.rect.height)
@@ -138,7 +142,7 @@ class Boss_Missile(pygame.sprite.Sprite):
         self.remove(self.allsprites, self.active)
 
     def update(self):
-        self.rect = self.rect.move(0, 2 * self.speed) # 敵人移動速度
+        self.rect = self.rect.move(0, 2 * self.speed) # 敵人飛彈移動速度
         if self.rect.bottom > self.area.bottom:
             self.recycle()
 
