@@ -58,7 +58,7 @@ class Enemy(pygame.sprite.Sprite):
             self.direction *= -1
 
         if self.hp <= 0:
-            Explosion.position(self.rect.center)
+            ExplosionEnemy.position(self.rect.center)
             self.kill()
 
         if self.rect.bottom > self.area.bottom:
@@ -127,9 +127,9 @@ class Boss(pygame.sprite.Sprite):
         if not (self.area.right >= self.rect.right and self.rect.left >= self.area.left):
             self.direction *= -1
 
-        if self.hp <= 0:
-            Explosion.position(self.rect.center)
-            self.kill()
+    def die(self):
+        ExplosionBoss.position(self.rect.center)
+        self.kill()
 
 
 # 敵人射出的飛彈
@@ -166,7 +166,7 @@ class Enemy_Missile(pygame.sprite.Sprite):
             self.recycle()
 
 # 死掉時的爆炸畫面
-class Explosion(pygame.sprite.Sprite):
+class ExplosionEnemy(pygame.sprite.Sprite):
     pool = pygame.sprite.Group()
     active = pygame.sprite.Group()
 
@@ -179,17 +179,59 @@ class Explosion(pygame.sprite.Sprite):
         self.area = screen.get_rect()
         self.speed = 2
         self.remaining_time = 0
+        self.wait = 7
 
     @classmethod
     def position(cls, location: Tuple[int, int], num: int = 1):
         if len(cls.pool) < num:
-            cls.pool.add([Explosion() for _ in range(num)])
+            cls.pool.add([cls() for _ in range(num)])
         explosion = cls.pool.sprites()[0]
         explosion.add(cls.allsprites, cls.active)
         explosion.remove(cls.pool)
         explosion.rect.center = location
         explosion.image = explosion.explode_image
-        explosion.remaining_time = 7
+        explosion.remaining_time = explosion.wait
+
+
+    def recycle(self):
+        self.add(self.pool)
+        self.remove(self.allsprites, self.active)
+
+    def update(self):
+        if not self.remaining_time:
+            self.recycle()
+            return
+        self.remaining_time -= 1
+        self.rect = self.rect.move(0, 2 * self.speed) # 敵人移動速度
+        if self.remaining_time == 1:
+            self.image = self.ash_image
+
+
+class ExplosionBoss(pygame.sprite.Sprite):
+    pool = pygame.sprite.Group()
+    active = pygame.sprite.Group()
+
+    def __init__(self):
+        super().__init__()
+        self.explode_image, _ = battle.load_image('enemy_ex.png', colorkey=-1, scale=(96, 102))
+        self.ash_image, self.rect = battle.load_image('enemy_ash.png', colorkey=-1, scale=(96, 102))
+        self.image = self.explode_image
+        screen = pygame.display.get_surface()
+        self.area = screen.get_rect()
+        self.speed = 2
+        self.remaining_time = 0
+        self.wait = 10
+
+    @classmethod
+    def position(cls, location: Tuple[int, int], num: int = 1):
+        if len(cls.pool) < num:
+            cls.pool.add([cls() for _ in range(num)])
+        explosion = cls.pool.sprites()[0]
+        explosion.add(cls.allsprites, cls.active)
+        explosion.remove(cls.pool)
+        explosion.rect.center = location
+        explosion.image = explosion.explode_image
+        explosion.remaining_time = explosion.wait
 
 
     def recycle(self):

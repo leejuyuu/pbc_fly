@@ -246,7 +246,8 @@ def main():
     enemy.Enemy_Missile.pool = pygame.sprite.Group([enemy.Enemy_Missile() for _ in range(10)])
     enemy.Enemy_Missile.allsprites = allsprites
     enemies = pygame.sprite.Group()
-    enemy.Explosion.allsprites = allsprites
+    enemy.ExplosionEnemy.allsprites = allsprites
+    enemy.ExplosionBoss.allsprites = allsprites
     enemy.Enemy.all_images = [load_image('enemy{}.png'.format(i),
                                          colorkey=-1,
                                          scale=(32, 34))[0] for i in range(1, 6)]
@@ -391,7 +392,7 @@ def main():
                     a_boss.hp -= HIT_HP_DROP
                 if a_boss.hp <= 0:
                     score += 200
-                    a_boss.kill()
+                    a_boss.die()
                     mark = True # player entering next level
                     initial_boss_appear = False # launch revival method every time a new boss appears
                     boss_number_appear += 1
