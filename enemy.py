@@ -46,6 +46,8 @@ class Enemy(pygame.sprite.Sprite):
         self.radius = max(self.rect.width, self.rect.height)
         self.rect.left = random.randrange(self.area.width - self.rect.width)
         self.rect.top = self.area.top
+        if self.number_appear == 4:
+            self.speed = 1
         if self.number_appear == 5:
             self.speed = 1
 
@@ -75,6 +77,8 @@ class Enemy(pygame.sprite.Sprite):
     def fire(self):
         if self.number_appear == 5:
             self.missile_number = 5
+        elif self.number_appear == 4:
+            self.missile_number = 7
         else:
             self.missile_number = 3
         self._fire()
@@ -87,6 +91,17 @@ class Enemy(pygame.sprite.Sprite):
                     vector = (math.cos(2*math.pi*i/n),
                               math.sin(2*math.pi*i/n))
                     Enemy_Missile.position([int(round(x + dx*self.radius)) for x, dx in zip(self.rect.center, vector)],
+                                           direction=vector)
+
+                self.fire_count_down = int(0.5*FIRE_WAIT)
+            elif self.number_appear == 4:
+                n = 6
+                for i in range(n):
+                    vector = (math.cos(2*math.pi*i/n),
+                              math.sin(2*math.pi*i/n))
+                    vector2 = (math.cos(2*math.pi*(i/n) + self.missile_number*2/(n+1)),
+                              math.sin(2*math.pi*(i/n) + self.missile_number*2/(n+1)))
+                    Enemy_Missile.position([int(round(x + dx*self.radius)) for x, dx in zip(self.rect.center, vector2)],
                                            direction=vector)
 
                 self.fire_count_down = int(0.5*FIRE_WAIT)
