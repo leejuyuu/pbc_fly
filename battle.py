@@ -252,8 +252,6 @@ def main():
                                          scale=(32, 34))[0] for i in range(1, 6)]
 
     # Add boss group
-    enemy.Boss_Missile.pool = pygame.sprite.Group([enemy.Boss_Missile() for _ in range(10)])
-    enemy.Boss_Missile.allsprites = allsprites
     bosses = pygame.sprite.Group()
 
     hp_pack = HpPack()
@@ -355,7 +353,7 @@ def main():
         # Boss fires missile
         if not frame % enemy_fire_period:
             for a_boss in bosses:
-                enemy.Boss_Missile.position(a_boss.rect.midbottom, 3)
+                enemy.Enemy_Missile.position(a_boss.rect.midbottom, 3)
 
         # Check if enemy collide with our plane
         for a_enemy in enemies:
@@ -367,14 +365,6 @@ def main():
 
         # Check if enemy's missile hit our plane
         for missile in enemy.Enemy_Missile.active:
-            if pygame.sprite.collide_circle(plane, missile):
-                missile.recycle()
-                plane.hp -= HIT_HP_DROP
-                plane.remove_powerup()
-
-
-        # Check if boss's missile hit our plane
-        for missile in enemy.Boss_Missile.active:
             if pygame.sprite.collide_circle(plane, missile):
                 missile.recycle()
                 plane.hp -= HIT_HP_DROP
