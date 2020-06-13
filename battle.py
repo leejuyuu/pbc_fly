@@ -18,6 +18,7 @@ POWER_UP_PROB = 0.001
 HIT_HP_DROP = 10
 COLLIDE_HP_DROP = 20
 IMG_DIR = Path(__file__).resolve().parent / 'img'
+SOUND_DIR = Path(__file__).resolve().parent / 'sound'
 
 
 # functions to create our resources
@@ -36,6 +37,19 @@ def load_image(name, colorkey=None, scale=None):
     if scale is not None:
         image = pygame.transform.scale(image, scale)
     return image, image.get_rect()
+
+def load_sound(name):
+    class NoneSound:
+        def play(self): pass
+    if not pygame.mixer:
+        return NoneSound()
+    path = SOUND_DIR / name
+    try:
+        sound = pygame.mixer.Sound(str(path))
+    except pygame.error as message:
+        print('Cannot load sound:', name)
+        raise SystemExit(message)
+    return sound
 
 class Plane(pygame.sprite.Sprite):
     def __init__(self):
@@ -221,6 +235,10 @@ class Button(object) :
 def main():
     """This is the main function."""
     pygame.init()
+    if not pygame.mixer:
+        print('Warning: Sound disabled')
+    music = load_sound('Africa.wav')
+    music.set_volume(0.05)
     screen = pygame.display.set_mode((480, 640))
     pygame.display.set_caption('pbc fly')
     pygame.mouse.set_visible(0)
@@ -276,6 +294,7 @@ def main():
     frame = 0
 
     while True:
+        music.play(loops=-1)
         frame += 1  # Loop counter
         score += 1/30
         clock.tick(60)  # Max FPS = 60
