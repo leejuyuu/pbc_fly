@@ -28,6 +28,7 @@ class Enemy(pygame.sprite.Sprite):
         self.missile_number = 0
         self.number_appear = 1
         self.direction = 1
+        self.frame = 0
 
     def revival(self):
         Enemy.initial_hp += 10
@@ -51,7 +52,11 @@ class Enemy(pygame.sprite.Sprite):
 
 
     def update(self):
-        self.rect = self.rect.move(0.8 * self.direction * self.speed, 0.8 * self.speed)
+        if not self.frame % 80:  # 讓敵人可以隨機左右移動
+            if (random.randrange(2) == 0):
+                self.direction *= -1
+        self.frame += 1
+        self.rect = self.rect.move(0.5 * self.direction * self.speed, 1.5 * self.speed)
 
         if not (self.area.right >= self.rect.right and self.rect.left >= self.area.left):
             self.direction *= -1
