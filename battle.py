@@ -191,6 +191,33 @@ class HpBar():
                          [self.x, self.y, self.tracking_object.hp, self.height])
 
 
+class Button(object) :
+  def __init__(self, image1, image2,position):
+    self.imageUp, ___ = load_image(image1)
+    self.imageDown, ____ = load_image(image2)
+    #self.imageUp = pygame.transform.scale(init_image1, (210, 70))
+    #self.imageDown =  pygame.transform.scale(init_image2, (210, 70))
+    self.position = position
+  
+  def isOver(self):
+    point_x,point_y = pygame.mouse.get_pos()
+    x, y = self. position
+    w, h = self.imageUp.get_size()
+
+    in_x = x - w/2 < point_x < x + w/2
+    in_y = y - h/2 < point_y < y + h/2
+    return in_x and in_y
+  
+  def render(self, screen):
+    w, h = self.imageUp.get_size()
+    x, y = self.position
+        
+    if self.isOver():
+        screen.blit(self.imageDown, (x-w/2,y-h/2))
+    else:
+        screen.blit(self.imageUp, (x-w/2, y-h/2))
+
+
 def main():
     """This is the main function."""
     pygame.init()
@@ -205,6 +232,9 @@ def main():
 
     score = 0
     score_font = pygame.font.SysFont('arial', 25)
+
+    again_button = Button('game_again.png', 'game_again_down.png', (240, 390))
+    leave_button = Button('leave_game.png', 'leave_game_down.png', (240, 480))
 
     plane = Plane()
     allsprites = pygame.sprite.RenderPlain((plane))
@@ -384,18 +414,23 @@ def main():
 
         # End the game if the HP goes to 0
         if plane.hp <= 0:
-            break
+            screen.blit(background, (0, background1_rect.y))
+            screen.blit(background, (0, background2_rect.y))
+            again_button.render(screen)
+            leave_button.render(screen)
+            pygame.display.update()
 
         allsprites.update()
         score_text = score_font.render('Score : %6d' % score, True, (225, 225, 225))
 
         # Draw Everything
-        screen.blit(background, (0, background1_rect.y))
-        screen.blit(background, (0, background2_rect.y))
-        hp_bar.draw()
-        screen.blit(score_text, (10, 5))
-        allsprites.draw(screen)
-        pygame.display.flip()
+        if plane.hp > 0 :
+           screen.blit(background, (0, background1_rect.y))
+           screen.blit(background, (0, background2_rect.y))
+           hp_bar.draw()
+           screen.blit(score_text, (10, 5))
+           allsprites.draw(screen)
+           pygame.display.flip()
     pygame.quit()
 
 if __name__ == '__main__':
