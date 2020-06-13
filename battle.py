@@ -217,6 +217,9 @@ def main():
     enemy.Enemy_Missile.allsprites = allsprites
     enemies = pygame.sprite.Group()
     enemy.Explosion.allsprites = allsprites
+    enemy.Enemy.all_images = [load_image('enemy{}.png'.format(i),
+                                         colorkey=-1,
+                                         scale=(32, 34))[0] for i in range(1, 6)]
 
     # Add boss group
     enemy.Boss_Missile.pool = pygame.sprite.Group([enemy.Boss_Missile() for _ in range(10)])
