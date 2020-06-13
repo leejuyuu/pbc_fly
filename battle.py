@@ -312,7 +312,7 @@ def main():
         if not frame % 100:
             if len(bosses) == 0:
                 new_enemy = enemy.Enemy()
-                new_enemy.number_appear = boss_number_appear
+                new_enemy.number_appear = boss_number_appear % 5
                 new_enemy.appearnce() # determine the image it appears
 
                 if mark: # enemy's hp increases since player has entered next level
