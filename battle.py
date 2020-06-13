@@ -361,7 +361,7 @@ def main():
         # Another boss appears 25 seconds after the previous one is defeated
         if frame == frame_record + 1500:
             new_boss = enemy.Boss()
-            new_boss.number_appear = boss_number_appear
+            new_boss.number_appear = boss_number_appear % 5
             new_boss.appearnce() # determine the image it appears
 
             if not initial_boss_appear: # Boss has already appeared more than 1 time
@@ -371,7 +371,7 @@ def main():
         # Boss fires missile
         if not frame % boss_fire_period:
             for a_boss in bosses:
-                enemy.Enemy_Missile.position(a_boss.rect.midbottom, 3)
+                a_boss.fire()
 
         # Check if enemy collide with our plane
         for a_enemy in enemies:

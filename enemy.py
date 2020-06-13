@@ -130,6 +130,9 @@ class Boss(pygame.sprite.Sprite):
         self.hp = HP_BOSS
         self.direction = 1
         self.number_appear = 1
+        self.missile_number = 0
+        self.fire_count_down = 0
+        self.firing_dir = 1
 
 
     def revival(self):
@@ -150,10 +153,41 @@ class Boss(pygame.sprite.Sprite):
 
         if not (self.area.right >= self.rect.right and self.rect.left >= self.area.left):
             self.direction *= -1
+        if self.missile_number > 0 and self.fire_count_down == 0:
+            self._fire()
+        if self.fire_count_down > 0:
+            self.fire_count_down -= 1
+        if self.speed == 0 and self.missile_number == 0:
+            self.speed = 1.5
 
     def die(self):
         ExplosionBoss.position(self.rect.center)
         self.kill()
+
+    def fire(self):
+        if self.missile_number > 0:
+            return
+        if self.number_appear == 1:
+            self.firing_dir *= -1
+            self.missile_number = 20
+            # self.speed = 0
+        else:
+            self.missile_number = 1
+        self._fire()
+
+    def _fire(self):
+        if self.number_appear == 1:
+            vector = (self.firing_dir*math.cos(math.pi*(0.8*self.missile_number/20 + 0.1)),
+                      math.sin(math.pi*(0.8*self.missile_number/20 + 0.1)))
+            print(self.missile_number,vector)
+            Enemy_Missile.position(self.rect.midbottom,
+                                    direction=vector)
+
+            self.fire_count_down = int(0.3*FIRE_WAIT)
+        else:
+            Enemy_Missile.position(self.rect.midbottom, 3)
+        self.missile_number -= 1
+
 
 
 # 敵人射出的飛彈
@@ -187,7 +221,7 @@ class Enemy_Missile(pygame.sprite.Sprite):
         self.remove(self.allsprites, self.active)
 
     def update(self):
-        self.rect = self.rect.move([d*self.speed for d in self.direction])
+        self.rect = self.rect.move([int(round(d*self.speed)) for d in self.direction])
         if self.rect.bottom > self.area.bottom:
             self.recycle()
 
