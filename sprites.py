@@ -3,7 +3,6 @@
 This module handles all battle mechanisms.
 """
 import math
-from pathlib import Path
 import random
 from typing import Tuple
 import pygame
@@ -23,7 +22,6 @@ HP_BOSS = 200
 HP_ENEMY = 30
 FIRE_WAIT = 25
 ENEMY_FIRE_PERIOD = 120
-
 
 
 class Plane(pygame.sprite.Sprite):
@@ -90,7 +88,6 @@ class Plane(pygame.sprite.Sprite):
         self.image = self.all_images[0]
 
 
-
 class Missile(pygame.sprite.Sprite):
     pool = pygame.sprite.Group()
     active = pygame.sprite.Group()
@@ -147,6 +144,7 @@ class FallingItem(pygame.sprite.Sprite):
         self.rect = self.rect.move(0, 1 * self.speed)
         if self.rect.bottom > self.area.bottom:
             self.kill()
+
 
 class PowerUp(FallingItem):
     """Sprite for falling powerup items. See base class."""
@@ -226,7 +224,7 @@ class Enemy(pygame.sprite.Sprite):
 
     def update(self):
         if not self.frame % 80:  # 讓敵人可以隨機左右移動
-            if (random.randrange(2) == 0):
+            if random.randrange(2) == 0:
                 self.direction *= -1
         self.frame += 1
         self.rect = self.rect.move(0.5 * self.direction * self.speed, 1.5 * self.speed)
@@ -265,8 +263,8 @@ class Enemy(pygame.sprite.Sprite):
                 for i in range(n):
                     vector = (math.cos(2*math.pi*i/n),
                               math.sin(2*math.pi*i/n))
-                    Enemy_Missile.position([int(round(x + dx*self.radius)) for x, dx in zip(self.rect.center, vector)],
-                                           direction=vector)
+                    EnemyMissile.position([int(round(x + dx*self.radius)) for x, dx in zip(self.rect.center, vector)],
+                                          direction=vector)
 
                 self.fire_count_down = int(0.5*FIRE_WAIT)
             elif self.number_appear == 4:
@@ -275,17 +273,16 @@ class Enemy(pygame.sprite.Sprite):
                     vector = (math.cos(2*math.pi*i/n),
                               math.sin(2*math.pi*i/n))
                     vector2 = (math.cos(2*math.pi*(i/n) + self.missile_number*2/(n+1)),
-                              math.sin(2*math.pi*(i/n) + self.missile_number*2/(n+1)))
-                    Enemy_Missile.position([int(round(x + dx*self.radius)) for x, dx in zip(self.rect.center, vector2)],
-                                           direction=vector)
+                               math.sin(2*math.pi*(i/n) + self.missile_number*2/(n+1)))
+                    position = [int(round(x + dx*self.radius)) for x, dx in zip(self.rect.center, vector2)]
+                    EnemyMissile.position(position, direction=vector)
 
                 self.fire_count_down = int(0.5*FIRE_WAIT)
 
             else:
-                Enemy_Missile.position(self.rect.midbottom)
+                EnemyMissile.position(self.rect.midbottom)
                 self.fire_count_down = FIRE_WAIT
             self.missile_number -= 1
-
 
 
 # 魔王本身設定
@@ -354,18 +351,17 @@ class Boss(pygame.sprite.Sprite):
         if self.number_appear == 1:
             vector = (self.firing_dir*math.cos(math.pi*(0.8*self.missile_number/20 + 0.1)),
                       math.sin(math.pi*(0.8*self.missile_number/20 + 0.1)))
-            Enemy_Missile.position(self.rect.midbottom,
-                                    direction=vector)
+            EnemyMissile.position(self.rect.midbottom,
+                                  direction=vector)
 
             self.fire_count_down = int(0.3*FIRE_WAIT)
         else:
-            Enemy_Missile.position(self.rect.midbottom, 3)
+            EnemyMissile.position(self.rect.midbottom, 3)
         self.missile_number -= 1
 
 
-
 # 敵人射出的飛彈
-class Enemy_Missile(pygame.sprite.Sprite):
+class EnemyMissile(pygame.sprite.Sprite):
     pool = pygame.sprite.Group()
     active = pygame.sprite.Group()
 
@@ -380,7 +376,7 @@ class Enemy_Missile(pygame.sprite.Sprite):
     @classmethod
     def position(cls, location: Tuple[int, int], num: int = 1, direction: Tuple[int, int] = (0, 1)):
         if len(cls.pool) < num:
-            cls.pool.add([Enemy_Missile() for _ in range(num)])
+            cls.pool.add([EnemyMissile() for _ in range(num)])
         x_all = ((-(num-1)/2 + i)*30 for i in range(num))
         for x in x_all:
             missile = cls.pool.sprites()[0]
@@ -398,6 +394,7 @@ class Enemy_Missile(pygame.sprite.Sprite):
         self.rect = self.rect.move([int(round(d*self.speed)) for d in self.direction])
         if self.rect.bottom > self.area.bottom:
             self.recycle()
+
 
 # 死掉時的爆炸畫面
 class ExplosionEnemy(pygame.sprite.Sprite):
@@ -467,7 +464,6 @@ class ExplosionBoss(pygame.sprite.Sprite):
         explosion.image = explosion.explode_image
         explosion.remaining_time = explosion.wait
 
-
     def recycle(self):
         self.add(self.pool)
         self.remove(self.allsprites, self.active)
@@ -482,31 +478,29 @@ class ExplosionBoss(pygame.sprite.Sprite):
             self.image = self.ash_image
 
 
-class Button(object) :
-  def __init__(self, image1, image2, position, status = False):
-    self.imageUp, ___ = main.load_image(image1)
-    self.imageDown, ____ = main.load_image(image2)
-    self.position = position
-    self.status = False
-  
-  def isOver(self):
-    point_x,point_y = pygame.mouse.get_pos()
-    x, y = self. position
-    w, h = self.imageUp.get_size()
+class Button(object):
+    def __init__(self, image1, image2, position, status=False):
+        self.imageUp, _ = main.load_image(image1)
+        self.imageDown, _ = main.load_image(image2)
+        self.position = position
+        self.status = False
 
-    in_x = x - w/2 < point_x < x + w/2
-    in_y = y - h/2 < point_y < y + h/2
-    return in_x and in_y
-  
-  def render(self, screen):
-    w, h = self.imageUp.get_size()
-    x, y = self.position
-        
-    if self.isOver():
-        screen.blit(self.imageDown, (int(x-w/2), int(y-h/2)))
-        if pygame.mouse.get_pressed()[0] == True :
-            self.status = True
-    else:
-        screen.blit(self.imageUp, (int(x-w/2), int(y-h/2)))
+    def isOver(self):
+        point_x, point_y = pygame.mouse.get_pos()
+        x, y = self. position
+        w, h = self.imageUp.get_size()
 
+        in_x = x - w/2 < point_x < x + w/2
+        in_y = y - h/2 < point_y < y + h/2
+        return in_x and in_y
 
+    def render(self, screen):
+        w, h = self.imageUp.get_size()
+        x, y = self.position
+
+        if self.isOver():
+            screen.blit(self.imageDown, (int(x-w/2), int(y-h/2)))
+            if pygame.mouse.get_pressed()[0]:
+                self.status = True
+        else:
+            screen.blit(self.imageUp, (int(x-w/2), int(y-h/2)))

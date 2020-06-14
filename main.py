@@ -33,9 +33,17 @@ def load_image(name, colorkey=None, scale=None):
         image = pygame.transform.scale(image, scale)
     return image, image.get_rect()
 
+
+class NoneSound:
+    """Dummy sound object for the case cannot import pygame mixer module"""
+    def play(self):
+        pass
+
+    def set_volume(self, i: float):
+        pass
+
+
 def load_sound(name):
-    class NoneSound:
-        def play(self): pass
     if not pygame.mixer:
         return NoneSound()
     path = SOUND_DIR / name
@@ -45,7 +53,6 @@ def load_sound(name):
         print('Cannot load sound:', name)
         raise SystemExit(message)
     return sound
-
 
 
 def main():
@@ -78,36 +85,32 @@ def main():
     sprites.Missile.allsprites = allsprites
     sprites.FallingItem.allsprites = allsprites
 
-    sprites.Enemy_Missile.pool = pygame.sprite.Group([sprites.Enemy_Missile() for _ in range(10)])
-    sprites.Enemy_Missile.allsprites = allsprites
+    sprites.EnemyMissile.pool = pygame.sprite.Group([sprites.EnemyMissile() for _ in range(10)])
+    sprites.EnemyMissile.allsprites = allsprites
     enemies = pygame.sprite.Group()
     sprites.ExplosionEnemy.allsprites = allsprites
     sprites.ExplosionBoss.allsprites = allsprites
     sprites.Enemy.all_images = [load_image('enemy{}.png'.format(i),
-                                         colorkey=-1,
-                                         scale=(32, 34))[0] for i in range(1, 6)]
+                                           colorkey=-1,
+                                           scale=(32, 34))[0] for i in range(1, 6)]
 
     # Add boss group
     bosses = pygame.sprite.Group()
     sprites.Boss.all_images = [load_image('boss{}.png'.format(i),
-                                        colorkey=-1,
-                                        scale=(96, 102))[0] for i in range(1, 6)]
+                                          colorkey=-1,
+                                          scale=(96, 102))[0] for i in range(1, 6)]
 
     hp_pack = sprites.HpPack()
     powerup = sprites.PowerUp()
     hp_bar = sprites.HpBar(plane)
     fire_period = 20
-    enemy_fire_period = 120
     boss_fire_period = 70
-    fire_wait = 25
-
 
     mark = False # to identify whether enemy adds hp after 1 boss is defeated (enemy level up)
     initial_boss_appear = True # to identify the first appearance of boss
     boss_number_appear = 1 # the number of boss that has appeared including this one
 
     frame_record = int()
-
 
     clock = pygame.time.Clock()
     frame = 0
@@ -200,7 +203,7 @@ def main():
 
 
         # Check if enemy's missile hit our plane
-        for missile in sprites.Enemy_Missile.active:
+        for missile in sprites.EnemyMissile.active:
             if pygame.sprite.collide_circle(plane, missile):
                 missile.recycle()
                 plane.hp -= HIT_HP_DROP
@@ -245,9 +248,9 @@ def main():
             screen.blit(gameover_image, (40, 150))
             again_button.render(screen)
             leave_button.render(screen)
-            if again_button.status == True :
+            if again_button.status:
                 main()
-            if leave_button.status == True :
+            if leave_button.status:
                 break
             pygame.display.update()
 
@@ -255,14 +258,15 @@ def main():
         score_text = score_font.render('Score : %6d' % score, True, (225, 225, 225))
 
         # Draw Everything
-        if plane.hp > 0 :
-           screen.blit(background, (0, background1_rect.y))
-           screen.blit(background, (0, background2_rect.y))
-           hp_bar.draw()
-           screen.blit(score_text, (10, 5))
-           allsprites.draw(screen)
-           pygame.display.flip()
+        if plane.hp > 0:
+            screen.blit(background, (0, background1_rect.y))
+            screen.blit(background, (0, background2_rect.y))
+            hp_bar.draw()
+            screen.blit(score_text, (10, 5))
+            allsprites.draw(screen)
+            pygame.display.flip()
     pygame.quit()
+
 
 if __name__ == '__main__':
     main()
