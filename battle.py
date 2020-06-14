@@ -206,12 +206,13 @@ class HpBar():
 
 
 class Button(object) :
-  def __init__(self, image1, image2,position):
+  def __init__(self, image1, image2, position, status == False):
     self.imageUp, ___ = load_image(image1)
     self.imageDown, ____ = load_image(image2)
     #self.imageUp = pygame.transform.scale(init_image1, (210, 70))
     #self.imageDown =  pygame.transform.scale(init_image2, (210, 70))
     self.position = position
+    self.status = False
   
   def isOver(self):
     point_x,point_y = pygame.mouse.get_pos()
@@ -228,6 +229,8 @@ class Button(object) :
         
     if self.isOver():
         screen.blit(self.imageDown, (int(x-w/2), int(y-h/2)))
+        if pygame.mouse.get_pressed()[0] == True :
+            self.status = True
     else:
         screen.blit(self.imageUp, (int(x-w/2), int(y-h/2)))
 
@@ -428,6 +431,10 @@ def main():
             screen.blit(background, (0, background2_rect.y))
             again_button.render(screen)
             leave_button.render(screen)
+            if again_button.status == True :
+                main()
+            if leave_button.status == True :
+                break
             pygame.display.update()
 
         allsprites.update()
