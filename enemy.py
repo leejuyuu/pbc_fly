@@ -50,7 +50,7 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.top = self.area.top
         if self.number_appear == 4:
             self.speed = 1
-        if self.number_appear == 5:
+        if self.number_appear == 0:
             self.speed = 1
         if self.number_appear == 4 or self.number_appear == 0:
             self.fire_cycle = 2*ENEMY_FIRE_PERIOD
