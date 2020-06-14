@@ -188,7 +188,6 @@ class Boss(pygame.sprite.Sprite):
         if self.number_appear == 1:
             vector = (self.firing_dir*math.cos(math.pi*(0.8*self.missile_number/20 + 0.1)),
                       math.sin(math.pi*(0.8*self.missile_number/20 + 0.1)))
-            print(self.missile_number,vector)
             Enemy_Missile.position(self.rect.midbottom,
                                     direction=vector)
 
