@@ -212,13 +212,13 @@ def main():
                 plane.remove_powerup()
 
         # Check if our plane's missile hit enemy
-        for missile in sprites.Missile.active:
-            for a_enemy in enemies:
+        for a_enemy in enemies:
+            for missile in sprites.Missile.active:
                 if pygame.sprite.collide_circle(a_enemy, missile):
                     missile.recycle()
                     a_enemy.hp -= HIT_HP_DROP
-                if a_enemy.hp <= 0:
-                    score += 40
+            if a_enemy.hp <= 0:
+                score += 40
 
 
         # Check if boss collide with our plane
@@ -229,18 +229,18 @@ def main():
 
 
         # Check if our plane's missile hit boss
-        for missile in sprites.Missile.active:
-            for a_boss in bosses:
+        for a_boss in bosses:
+            for missile in sprites.Missile.active:
                 if pygame.sprite.collide_circle(a_boss, missile):
                     missile.recycle()
                     a_boss.hp -= HIT_HP_DROP
-                if a_boss.hp <= 0:
-                    score += 200
-                    a_boss.die()
-                    mark = True # player entering next level
-                    initial_boss_appear = False # launch revival method every time a new boss appears
-                    boss_number_appear += 1
-                    frame_record = frame # to record the number of frames when a boss is defeated
+            if a_boss.hp <= 0:
+                score += 200
+                a_boss.die()
+                mark = True # player entering next level
+                initial_boss_appear = False # launch revival method every time a new boss appears
+                boss_number_appear += 1
+                frame_record = frame # to record the number of frames when a boss is defeated
 
 
         # End the game if the HP goes to 0
