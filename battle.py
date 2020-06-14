@@ -206,7 +206,7 @@ class HpBar():
 
 
 class Button(object) :
-  def __init__(self, image1, image2, position, status == False):
+  def __init__(self, image1, image2, position, status = False):
     self.imageUp, ___ = load_image(image1)
     self.imageDown, ____ = load_image(image2)
     #self.imageUp = pygame.transform.scale(init_image1, (210, 70))
