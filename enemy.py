@@ -11,6 +11,7 @@ import battle
 HP_BOSS = 200
 HP_ENEMY = 30
 FIRE_WAIT = 25
+ENEMY_FIRE_PERIOD = 120
 
 
 # 敵人本身設定
@@ -34,6 +35,7 @@ class Enemy(pygame.sprite.Sprite):
         self.direction = 1
         self.frame = 0
         self.fire_count_down = 0
+        self.fire_cycle = ENEMY_FIRE_PERIOD
 
     def revival(self):
         Enemy.initial_hp += 10
@@ -50,6 +52,10 @@ class Enemy(pygame.sprite.Sprite):
             self.speed = 1
         if self.number_appear == 5:
             self.speed = 1
+        if self.number_appear == 4 or self.number_appear == 0:
+            self.fire_cycle = 2*ENEMY_FIRE_PERIOD
+        else:
+            self.fire_cycle = ENEMY_FIRE_PERIOD
 
 
     def update(self):
@@ -72,20 +78,23 @@ class Enemy(pygame.sprite.Sprite):
             self._fire()
         if self.fire_count_down > 0:
             self.fire_count_down -= 1
+        if self.speed == 0 and self.missile_number == 0:
+            self.speed = 2
 
 
     def fire(self):
-        if self.number_appear == 5:
-            self.missile_number = 5
-        elif self.number_appear == 4:
-            self.missile_number = 7
-        else:
-            self.missile_number = 3
-        self._fire()
+        if not self.frame % self.fire_cycle:
+            if self.number_appear == 0:
+                self.missile_number = 5
+            elif self.number_appear == 4:
+                self.missile_number = 5
+            else:
+                self.missile_number = 3
+            self._fire()
 
     def _fire(self):
         if self.missile_number > 0:
-            if self.number_appear == 5:
+            if self.number_appear == 0:
                 n = 6
                 for i in range(n):
                     vector = (math.cos(2*math.pi*i/n),
