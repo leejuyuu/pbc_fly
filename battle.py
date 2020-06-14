@@ -256,8 +256,7 @@ def main():
 
     again_button = Button('game_again.png', 'game_again_down.png', (240, 390))
     leave_button = Button('leave_game.png', 'leave_game_down.png', (240, 480))
-    gameover_imgae, _____ = load_image('gameover.png')
-    gameover_imgae = pygame.transform.scale(gameover_image, (400, 150))
+    gameover_image, _ = load_image('gameover.png', scale=(400, 150))
 
     plane = Plane()
     allsprites = pygame.sprite.RenderPlain((plane))
