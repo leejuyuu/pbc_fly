@@ -109,6 +109,7 @@ def main():
     mark = False # to identify whether enemy adds hp after 1 boss is defeated (enemy level up)
     initial_boss_appear = True # to identify the first appearance of boss
     boss_number_appear = 1 # the number of boss that has appeared including this one
+    show_final_score = False
 
     frame_record = int()
 
@@ -248,6 +249,11 @@ def main():
             screen.blit(background, (0, background1_rect.y))
             screen.blit(background, (0, background2_rect.y))
             screen.blit(gameover_image, (40, 150))
+            if show_final_score == False:
+                final_score = score
+                show_final_score = True
+            final_score_text = score_font.render('Score : %6d' % final_score, True, (225, 225, 225))
+            screen.blit(final_score_text, (10, 5))
             again_button.render(screen)
             leave_button.render(screen)
             if again_button.status:
