@@ -209,8 +209,6 @@ class Button(object) :
   def __init__(self, image1, image2, position, status = False):
     self.imageUp, ___ = load_image(image1)
     self.imageDown, ____ = load_image(image2)
-    #self.imageUp = pygame.transform.scale(init_image1, (210, 70))
-    #self.imageDown =  pygame.transform.scale(init_image2, (210, 70))
     self.position = position
     self.status = False
   
@@ -246,7 +244,7 @@ def main():
     pygame.display.set_caption('pbc fly')
     pygame.mouse.set_visible(0)
 
-    background, _ = load_image('skybackground.jpg', scale=(480, 640))
+    background, _ = load_image('background1.png', scale=(480, 640))
     background1_rect = pygame.Rect(0, 0, 480, 640)
     background2_rect = pygame.Rect(0, 0, 480, 640)
 
