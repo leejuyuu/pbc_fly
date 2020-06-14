@@ -2,8 +2,17 @@
 from pathlib import Path
 import random
 import pygame
+import sprites
 
 
+# Constants to control gameplay and hardness
+SCROLLING_SPEED = 2
+INITIAL_HP = 160
+HP_INCREMENT = 40
+HP_PACK_PROB = 0.001
+POWER_UP_PROB = 0.001
+HIT_HP_DROP = 10
+COLLIDE_HP_DROP = 20
 IMG_DIR = Path(__file__).resolve().parent / 'img'
 SOUND_DIR = Path(__file__).resolve().parent / 'sound'
 
@@ -59,34 +68,34 @@ def main():
     score_font = pygame.font.SysFont('arial', 25)
 
     again_button = sprites.Button('game_again.png', 'game_again_down.png', (240, 390))
-    leave_button = Button('leave_game.png', 'leave_game_down.png', (240, 480))
+    leave_button = sprites.Button('leave_game.png', 'leave_game_down.png', (240, 480))
     gameover_image, _ = load_image('gameover.png', scale=(400, 150))
 
-    plane = Plane()
+    plane = sprites.Plane()
     allsprites = pygame.sprite.RenderPlain((plane))
     # Create 10 missiles and store them in the class variable pool
-    Missile.pool = pygame.sprite.Group([Missile() for _ in range(10)])
-    Missile.allsprites = allsprites
-    FallingItem.allsprites = allsprites
+    sprites.Missile.pool = pygame.sprite.Group([sprites.Missile() for _ in range(10)])
+    sprites.Missile.allsprites = allsprites
+    sprites.FallingItem.allsprites = allsprites
 
-    enemy.Enemy_Missile.pool = pygame.sprite.Group([enemy.Enemy_Missile() for _ in range(10)])
-    enemy.Enemy_Missile.allsprites = allsprites
+    sprites.Enemy_Missile.pool = pygame.sprite.Group([sprites.Enemy_Missile() for _ in range(10)])
+    sprites.Enemy_Missile.allsprites = allsprites
     enemies = pygame.sprite.Group()
-    enemy.ExplosionEnemy.allsprites = allsprites
-    enemy.ExplosionBoss.allsprites = allsprites
-    enemy.Enemy.all_images = [load_image('enemy{}.png'.format(i),
+    sprites.ExplosionEnemy.allsprites = allsprites
+    sprites.ExplosionBoss.allsprites = allsprites
+    sprites.Enemy.all_images = [load_image('enemy{}.png'.format(i),
                                          colorkey=-1,
                                          scale=(32, 34))[0] for i in range(1, 6)]
 
     # Add boss group
     bosses = pygame.sprite.Group()
-    enemy.Boss.all_images = [load_image('boss{}.png'.format(i),
+    sprites.Boss.all_images = [load_image('boss{}.png'.format(i),
                                         colorkey=-1,
                                         scale=(96, 102))[0] for i in range(1, 6)]
 
-    hp_pack = HpPack()
-    powerup = PowerUp()
-    hp_bar = HpBar(plane)
+    hp_pack = sprites.HpPack()
+    powerup = sprites.PowerUp()
+    hp_bar = sprites.HpBar(plane)
     fire_period = 20
     enemy_fire_period = 120
     boss_fire_period = 70
@@ -143,7 +152,7 @@ def main():
         # Enemy's appearnce
         if not frame % 100:
             if len(bosses) == 0:
-                new_enemy = enemy.Enemy()
+                new_enemy = sprites.Enemy()
                 new_enemy.number_appear = boss_number_appear % 5
                 new_enemy.appearnce() # determine the image it appears
 
@@ -169,7 +178,7 @@ def main():
 
         # Another boss appears 25 seconds after the previous one is defeated
         if frame == frame_record + 1500:
-            new_boss = enemy.Boss()
+            new_boss = sprites.Boss()
             new_boss.number_appear = boss_number_appear % 5
             new_boss.appearnce() # determine the image it appears
 
@@ -191,14 +200,14 @@ def main():
 
 
         # Check if enemy's missile hit our plane
-        for missile in enemy.Enemy_Missile.active:
+        for missile in sprites.Enemy_Missile.active:
             if pygame.sprite.collide_circle(plane, missile):
                 missile.recycle()
                 plane.hp -= HIT_HP_DROP
                 plane.remove_powerup()
 
         # Check if our plane's missile hit enemy
-        for missile in Missile.active:
+        for missile in sprites.Missile.active:
             for a_enemy in enemies:
                 if pygame.sprite.collide_circle(a_enemy, missile):
                     missile.recycle()
@@ -215,7 +224,7 @@ def main():
 
 
         # Check if our plane's missile hit boss
-        for missile in Missile.active:
+        for missile in sprites.Missile.active:
             for a_boss in bosses:
                 if pygame.sprite.collide_circle(a_boss, missile):
                     missile.recycle()

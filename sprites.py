@@ -29,9 +29,9 @@ ENEMY_FIRE_PERIOD = 120
 class Plane(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.all_images = [load_image('plane_lv{}.png'.format(i),
-                                      colorkey=-1,
-                                      scale=(64, 68))[0] for i in range(1, 4)]
+        self.all_images = [main.load_image('plane_lv{}.png'.format(i),
+                                           colorkey=-1,
+                                           scale=(64, 68))[0] for i in range(1, 4)]
         self.image = self.all_images[0]
         self.rect = self.image.get_rect()
 
@@ -97,7 +97,7 @@ class Missile(pygame.sprite.Sprite):
 
     def __init__(self):
         super().__init__()
-        self.image, self.rect = load_image('bullet.png', colorkey=-1, scale=(5, 20))
+        self.image, self.rect = main.load_image('bullet.png', colorkey=-1, scale=(5, 20))
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()
         self.speed = 10
@@ -152,14 +152,14 @@ class PowerUp(FallingItem):
     """Sprite for falling powerup items. See base class."""
     def __init__(self):
         super().__init__()
-        self.image, self.rect = load_image('powerup.png', colorkey=-1, scale=(25, 25))
+        self.image, self.rect = main.load_image('powerup.png', colorkey=-1, scale=(25, 25))
 
 
 class HpPack(FallingItem):
     """Sprite for falling HP packs. See base class."""
     def __init__(self):
         super().__init__()
-        self.image, self.rect = load_image('hp_pack.png', colorkey=-1, scale=(25, 25))
+        self.image, self.rect = main.load_image('hp_pack.png', colorkey=-1, scale=(25, 25))
 
 
 class HpBar():
@@ -371,7 +371,7 @@ class Enemy_Missile(pygame.sprite.Sprite):
 
     def __init__(self):
         super().__init__()
-        self.image, self.rect = battle.load_image('bullet_enemy.png', colorkey=-1, scale=(5, 21))
+        self.image, self.rect = main.load_image('bullet_enemy.png', colorkey=-1, scale=(5, 21))
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()
         self.speed = 4
@@ -406,8 +406,8 @@ class ExplosionEnemy(pygame.sprite.Sprite):
 
     def __init__(self):
         super().__init__()
-        self.explode_image, _ = battle.load_image('enemy_ex.png', colorkey=-1, scale=(32, 34))
-        self.ash_image, self.rect = battle.load_image('enemy_ash.png', colorkey=-1, scale=(32, 34))
+        self.explode_image, _ = main.load_image('enemy_ex.png', colorkey=-1, scale=(32, 34))
+        self.ash_image, self.rect = main.load_image('enemy_ash.png', colorkey=-1, scale=(32, 34))
         self.image = self.explode_image
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()
@@ -447,8 +447,8 @@ class ExplosionBoss(pygame.sprite.Sprite):
 
     def __init__(self):
         super().__init__()
-        self.explode_image, _ = battle.load_image('enemy_ex.png', colorkey=-1, scale=(96, 102))
-        self.ash_image, self.rect = battle.load_image('enemy_ash.png', colorkey=-1, scale=(96, 102))
+        self.explode_image, _ = main.load_image('enemy_ex.png', colorkey=-1, scale=(96, 102))
+        self.ash_image, self.rect = main.load_image('enemy_ash.png', colorkey=-1, scale=(96, 102))
         self.image = self.explode_image
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()
@@ -484,8 +484,8 @@ class ExplosionBoss(pygame.sprite.Sprite):
 
 class Button(object) :
   def __init__(self, image1, image2, position, status = False):
-    self.imageUp, ___ = load_image(image1)
-    self.imageDown, ____ = load_image(image2)
+    self.imageUp, ___ = main.load_image(image1)
+    self.imageDown, ____ = main.load_image(image2)
     self.position = position
     self.status = False
   
