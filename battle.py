@@ -227,9 +227,9 @@ class Button(object) :
     x, y = self.position
         
     if self.isOver():
-        screen.blit(self.imageDown, (x-w/2,y-h/2))
+        screen.blit(self.imageDown, (int(x-w/2), int(y-h/2)))
     else:
-        screen.blit(self.imageUp, (x-w/2, y-h/2))
+        screen.blit(self.imageUp, (int(x-w/2), int(y-h/2)))
 
 
 def main():
@@ -300,6 +300,8 @@ def main():
         frame += 1  # Loop counter
         score += 1/30
         clock.tick(60)  # Max FPS = 60
+
+        pygame.mouse.set_visible(True)
 
         # Event handling
         for event in pygame.event.get():
