@@ -115,8 +115,8 @@ def main():
     clock = pygame.time.Clock()
     frame = 0
 
+    music.play(loops=-1)  # Looping play background music
     while True:
-        music.play(loops=-1)
         frame += 1  # Loop counter
         score += 1/30
         clock.tick(60)  # Max FPS = 60
