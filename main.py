@@ -75,7 +75,7 @@ def main():
 
     again_button = sprites.Button('game_again.png', 'game_again_down.png', (240, 390))
     leave_button = sprites.Button('leave_game.png', 'leave_game_down.png', (240, 480))
-    gameover_image, _ = load_image('gameover.png', scale=(400, 150))
+    gameover_image, _ = load_image('gameover.png', colorkey=-1, scale=(400, 150))
 
     plane = sprites.Plane()
     allsprites = pygame.sprite.RenderPlain((plane))
