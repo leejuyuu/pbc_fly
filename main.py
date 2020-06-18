@@ -64,7 +64,6 @@ def main():
     music.set_volume(0.05)
     screen = pygame.display.set_mode((480, 640))
     pygame.display.set_caption('pbc fly')
-    pygame.mouse.set_visible(0)
 
     background, _ = load_image('background1.png', scale=(480, 640))
     background1_rect = pygame.Rect(0, 0, 480, 640)
@@ -122,7 +121,6 @@ def main():
         score += 1/30
         clock.tick(60)  # Max FPS = 60
 
-        pygame.mouse.set_visible(True)
 
         # Event handling
         for event in pygame.event.get():
