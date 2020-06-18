@@ -483,7 +483,7 @@ class Button(object):
         self.imageUp, _ = main.load_image(image1)
         self.imageDown, _ = main.load_image(image2)
         self.position = position
-        self.status = False
+        self.pressed = False
 
     def isOver(self):
         point_x, point_y = pygame.mouse.get_pos()
@@ -501,6 +501,6 @@ class Button(object):
         if self.isOver():
             screen.blit(self.imageDown, (int(x-w/2), int(y-h/2)))
             if pygame.mouse.get_pressed()[0]:
-                self.status = True
+                self.pressed = True
         else:
             screen.blit(self.imageUp, (int(x-w/2), int(y-h/2)))

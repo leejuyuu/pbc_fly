@@ -254,9 +254,9 @@ def main():
             screen.blit(final_score_text, (10, 5))
             again_button.render(screen)
             leave_button.render(screen)
-            if again_button.status:
+            if again_button.pressed:
                 main()
-            if leave_button.status:
+            if leave_button.pressed:
                 break
             pygame.display.update()
 
