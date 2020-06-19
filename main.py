@@ -1,6 +1,7 @@
 
 from pathlib import Path
 import random
+from typing import Tuple
 import pygame
 import sprites
 
@@ -17,7 +18,11 @@ IMG_DIR = Path(__file__).resolve().parent / 'img'
 SOUND_DIR = Path(__file__).resolve().parent / 'sound'
 
 # functions to create our resources
-def load_image(name, colorkey=None, scale=None):
+def load_image(name, colorkey=None, scale: Tuple[int, int] = None):
+    """
+    Search for image file with filename 'name' in the ./sound/ directory
+    and try to load it as a sound object.
+    """
     path = IMG_DIR / name
     try:
         image = pygame.image.load(str(path))
@@ -43,7 +48,11 @@ class NoneSound:
         pass
 
 
-def load_sound(name):
+def load_sound(name: str) -> pygame.mixer.Sound:
+    """
+    Search for sound file with filename 'name' in the ./sound/ directory
+    and try to load it as a sound object.
+    """
     if not pygame.mixer:
         return NoneSound()
     path = SOUND_DIR / name
@@ -58,11 +67,14 @@ def load_sound(name):
 def main():
     """This is the main function."""
     pygame.init()
+
+    # Load background music
     if not pygame.mixer:
         print('Warning: Sound disabled')
     music = load_sound('Africa.wav')
     music.set_volume(0.05)
     screen = pygame.display.set_mode((480, 640))
+
     pygame.display.set_caption('pbc fly')
 
     background, _ = load_image('background1.png', scale=(480, 640))
