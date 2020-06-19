@@ -35,15 +35,13 @@ class Plane(pygame.sprite.Sprite):
 
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()
-        # Put the rect at the bottom center of the screen
-        self.rect.centerx = int(self.area.width // 2)
-        self.rect.bottom = int(self.area.height * 0.95)
         self.radius = max(self.rect.width, self.rect.height) // 2
         self.vert = 0
         self.horiz = 0
         self.speed = 2
         self.hp = INITIAL_HP
         self.power = 0
+        self.place_at_bottom_center()
 
     def key_pressed(self):
         keys_pressed = pygame.key.get_pressed()
@@ -86,6 +84,11 @@ class Plane(pygame.sprite.Sprite):
     def remove_powerup(self):
         self.power = 0
         self.image = self.all_images[0]
+
+    def place_at_bottom_center(self):
+        # Put the rect at the bottom center of the screen
+        self.rect.centerx = int(self.area.width // 2)
+        self.rect.bottom = int(self.area.height * 0.95)
 
 
 class Missile(pygame.sprite.Sprite):
