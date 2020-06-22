@@ -84,11 +84,18 @@ class Plane(pygame.sprite.Sprite):
             self.hp = INITIAL_HP
 
     def powerup(self):
+        """
+        The plane power up, changing the 'power' state and the image.
+        Will increase the number of missiles fired.
+        """
         if self.power < 2:
             self.power += 1
             self.image = self.all_images[self.power]
 
     def remove_powerup(self):
+        """
+        Reinitialize the plane's 'power' state and image.
+        """
         self.power = 0
         self.image = self.all_images[0]
 
@@ -249,7 +256,6 @@ class Enemy(pygame.sprite.Sprite):
         # Change image to the next
         self.image = self.all_images[self.number_appear - 1]
 
-        self.radius = max(self.rect.width, self.rect.height)
         self.rect.left = random.randrange(self.area.width - self.rect.width)
         self.rect.top = self.area.top
         if self.number_appear == 4:
