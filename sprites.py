@@ -25,6 +25,9 @@ ENEMY_FIRE_PERIOD = 120
 
 
 class Plane(pygame.sprite.Sprite):
+    """
+    The plane object that the player controlls.
+    """
     def __init__(self):
         super().__init__()
         self.all_images = [main.load_image('plane_lv{}.png'.format(i),
@@ -38,25 +41,32 @@ class Plane(pygame.sprite.Sprite):
         self.radius = max(self.rect.width, self.rect.height) // 2
         self.vert = 0
         self.horiz = 0
-        self.speed = 2
+        self.speed = 4
         self.hp = INITIAL_HP
         self.power = 0
         self.place_at_bottom_center()
 
     def key_pressed(self):
+        """
+        Check if the arrow keys are pressed. If so, store the moving command in
+        'vert' or 'horiz' attributes. The next update() call will move.
+        """
         keys_pressed = pygame.key.get_pressed()
         self.vert = 0
         self.horiz = 0
         if keys_pressed[pygame.K_LEFT]:
-            self.horiz = -2 * self.speed
+            self.horiz = -self.speed
         if keys_pressed[pygame.K_RIGHT]:
-            self.horiz = 2 * self.speed
+            self.horiz = self.speed
         if keys_pressed[pygame.K_UP]:
-            self.vert = -2 * self.speed
+            self.vert = -self.speed
         if keys_pressed[pygame.K_DOWN]:
-            self.vert = 2 * self.speed
+            self.vert = self.speed
 
     def update(self):
+        """
+        Update the plane position.
+        """
         new_rect = self.rect.move((self.horiz, self.vert))
 
         if not self.area.contains(new_rect):
@@ -78,22 +88,30 @@ class Plane(pygame.sprite.Sprite):
             self.power += 1
             self.image = self.all_images[self.power]
 
-    def fire(self):
-        Missile.position(self.rect.midtop, self.power + 1)
-
     def remove_powerup(self):
         self.power = 0
         self.image = self.all_images[0]
 
+    def fire(self):
+        """
+        Place missile at the top of the plane.
+        """
+        Missile.position(self.rect.midtop, self.power + 1)
+
     def place_at_bottom_center(self):
-        # Put the rect at the bottom center of the screen
+        """
+        Put the rect at the bottom center of the screen
+        """
         self.rect.centerx = int(self.area.width // 2)
         self.rect.bottom = int(self.area.height * 0.95)
 
 
 class Missile(pygame.sprite.Sprite):
-    pool = pygame.sprite.Group()
-    active = pygame.sprite.Group()
+    """
+    Missile objects that is fired from player's plane.
+    """
+    pool = pygame.sprite.Group()  # Store created missiles to reuse them
+    active = pygame.sprite.Group()  # Store those on screen to process collision
 
     def __init__(self):
         super().__init__()
@@ -104,6 +122,10 @@ class Missile(pygame.sprite.Sprite):
 
     @classmethod
     def position(cls, location: Tuple[int, int], num: int = 1):
+        """
+        Pulls 'num' Missile instance(s) stored in the 'pool' attribute and place it
+        above 'location'. Add them to the allsprite and active group.
+        """
         if len(cls.pool) < num:
             cls.pool.add([Missile() for _ in range(num)])
         x_all = ((-(num-1)/2 + i)*30 for i in range(num))
@@ -115,6 +137,10 @@ class Missile(pygame.sprite.Sprite):
             missile.rect.x = int(x + location[0])
 
     def recycle(self):
+        """
+        Remove this Missile instance from the allsprite and place it back to
+        'pool' attribute for later reuse.
+        """
         self.add(self.pool)
         self.remove(self.allsprites, self.active)
 
@@ -127,15 +153,22 @@ class Missile(pygame.sprite.Sprite):
 class FallingItem(pygame.sprite.Sprite):
     """
     The base class for all randomly falling items which show up once in a while.
+    Only need to create one instances in the main function.
     """
     allsprites = None  # Handle to the 'allsprites' group in the main function
+
     def __init__(self):
         super().__init__()
         screen = pygame.display.get_surface()
         self.area = screen.get_rect()
         self.speed = SCROLLING_SPEED
+        self.rect = pygame.Rect
 
     def appear(self, position: int = None):
+        """
+        Place the instance to the top of the window, and the left edge to the
+        give position or a random position.
+        """
         self.rect.top = self.area.top
         if position is None:
             self.rect.left = random.randrange(self.area.width - 2 * self.rect.width)
@@ -164,8 +197,11 @@ class HpPack(FallingItem):
 
 
 class HpBar():
+    """
+    Use object to track an object's hp attribute value and draw it as a bar.
+    """
     def __init__(self, tracking_object: Plane):
-        self.tracking_object = tracking_object
+        self.tracking_object = tracking_object  # Handle to the object to track
         self.screen = pygame.display.get_surface()
         self.width = 160
         self.height = 15
@@ -173,6 +209,7 @@ class HpBar():
         self.y = 620
 
     def draw(self):
+        """Draw the bar on screen"""
         pygame.draw.rect(self.screen, (0, 0, 150),
                          [self.x - 3, self.y - 3, self.width + 6, self.height + 6])
         pygame.draw.rect(self.screen, (130, 0, 0),
@@ -501,8 +538,8 @@ class ExplosionBoss(pygame.sprite.Sprite):
 
 class Button(object):
     def __init__(self, image1, image2, position):
-        self.imageUp, _ = main.load_image(image1, colorkey=-1, scale=(272,81))
-        self.imageDown, _ = main.load_image(image2, colorkey=-1, scale=(272,81))
+        self.imageUp, _ = main.load_image(image1, colorkey=-1, scale=(272, 81))
+        self.imageDown, _ = main.load_image(image2, colorkey=-1, scale=(272, 81))
         self.position = position
         self.pressed = False
 
