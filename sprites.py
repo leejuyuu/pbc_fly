@@ -433,6 +433,10 @@ class EnemyMissile(pygame.sprite.Sprite):
 
     @classmethod
     def position(cls, location: Tuple[int, int], num: int = 1, direction: Tuple[int, int] = (0, 1)):
+        """
+        Pulls 'num' Missile instance(s) stored in the 'pool' attribute and place it
+        above 'location'. Add them to the allsprite and active group.
+        """
         if len(cls.pool) < num:
             cls.pool.add([EnemyMissile() for _ in range(num)])
         x_all = ((-(num-1)/2 + i)*30 for i in range(num))
@@ -445,6 +449,10 @@ class EnemyMissile(pygame.sprite.Sprite):
             missile.direction = direction
 
     def recycle(self): # 回收到pool裡重複再利用
+        """
+        Remove this Missile instance from the allsprite and place it back to
+        'pool' attribute for later reuse.
+        """
         self.add(self.pool)
         self.remove(self.allsprites, self.active)
 
@@ -456,6 +464,9 @@ class EnemyMissile(pygame.sprite.Sprite):
 
 # 小兵死掉時的爆炸畫面
 class ExplosionEnemy(pygame.sprite.Sprite):
+    """
+    The explosion image that will show up when a normal enemy dies.
+    """
     pool = pygame.sprite.Group()
     active = pygame.sprite.Group()
 
@@ -471,9 +482,13 @@ class ExplosionEnemy(pygame.sprite.Sprite):
         self.wait = 7
 
     @classmethod
-    def position(cls, location: Tuple[int, int], num: int = 1):
-        if len(cls.pool) < num:
-            cls.pool.add([cls() for _ in range(num)])
+    def position(cls, location: Tuple[int, int]):
+        """
+        Pulls a Explosion instance stored in the 'pool' attribute and place its
+        center at 'location'. Add them to the allsprite and active group.
+        """
+        if len(cls.pool) < 1:
+            cls.pool.add(cls())
         explosion = cls.pool.sprites()[0]
         explosion.add(cls.allsprites, cls.active)
         explosion.remove(cls.pool)
@@ -483,6 +498,10 @@ class ExplosionEnemy(pygame.sprite.Sprite):
 
 
     def recycle(self):
+        """
+        Remove this Explosion instance from the allsprite and place it back to
+        'pool' attribute for later reuse.
+        """
         self.add(self.pool)
         self.remove(self.allsprites, self.active)
 
@@ -497,6 +516,9 @@ class ExplosionEnemy(pygame.sprite.Sprite):
 
 # Boss死掉時的爆炸畫面
 class ExplosionBoss(pygame.sprite.Sprite):
+    """
+    The explosion image that will show up when a boss dies.
+    """
     pool = pygame.sprite.Group()
     active = pygame.sprite.Group()
 
@@ -512,9 +534,13 @@ class ExplosionBoss(pygame.sprite.Sprite):
         self.wait = 10
 
     @classmethod
-    def position(cls, location: Tuple[int, int], num: int = 1):
-        if len(cls.pool) < num:
-            cls.pool.add([cls() for _ in range(num)])
+    def position(cls, location: Tuple[int, int]):
+        """
+        Pulls a Explosion instance stored in the 'pool' attribute and place its
+        center at 'location'. Add them to the allsprite and active group.
+        """
+        if len(cls.pool) < 1:
+            cls.pool.add(cls())
         explosion = cls.pool.sprites()[0]
         explosion.add(cls.allsprites, cls.active)
         explosion.remove(cls.pool)
@@ -523,6 +549,10 @@ class ExplosionBoss(pygame.sprite.Sprite):
         explosion.remaining_time = explosion.wait
 
     def recycle(self):
+        """
+        Remove this Explosion instance from the allsprite and place it back to
+        'pool' attribute for later reuse.
+        """
         self.add(self.pool)
         self.remove(self.allsprites, self.active)
 
