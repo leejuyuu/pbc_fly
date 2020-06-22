@@ -1,3 +1,4 @@
+"""The main module of the game"""
 
 from pathlib import Path
 import random
@@ -16,6 +17,7 @@ HIT_HP_DROP = 10
 COLLIDE_HP_DROP = 20
 IMG_DIR = Path(__file__).resolve().parent / 'img'
 SOUND_DIR = Path(__file__).resolve().parent / 'sound'
+
 
 # functions to create our resources
 def load_image(name, colorkey=None, scale: Tuple[int, int] = None):
@@ -197,6 +199,7 @@ def main():
                     pygame.quit()
                     return
 
+            # Check if arrow key is pressed, and tell the plane to move
             plane.key_pressed()
 
             # The plane fires every constant period (frames)
@@ -321,6 +324,7 @@ def main():
             allsprites.draw(screen)
             pygame.display.flip()
 
+        # The end of game view, asking the player to choose if they want to continue
         while True:
             clock.tick(60)  # Max FPS = 60
             # Event handling (somehow this needs to be here to make get the mouse position work)
@@ -334,9 +338,7 @@ def main():
             screen.blit(background, (0, background1_rect.y))
             screen.blit(background, (0, background2_rect.y))
             screen.blit(gameover_image, (40, 150))
-            final_score = score
-            final_score_text = score_font.render('Score : %6d' % final_score, True, (225, 225, 225))
-            screen.blit(final_score_text, (10, 5))
+            screen.blit(score_text, (10, 5))
             again_button.render(screen)
             leave_button.render(screen)
             if again_button.pressed:
@@ -347,7 +349,6 @@ def main():
                 leave_button.pressed = False
                 break
             pygame.display.update()
-
 
     pygame.quit()
 
