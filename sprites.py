@@ -229,8 +229,13 @@ class Enemy(pygame.sprite.Sprite):
         if not self.frame % 80:  # 讓敵人可以隨機左右移動
             if not random.randrange(2):
                 self.direction *= -1
-        self.frame += 1
-        self.rect = self.rect.move(0.5 * self.direction * self.speed, 1.5 * self.speed)
+        if (self.number_appear == 2) or (self.number_appear == 3):
+            if self.frame >= 40 and self.frame < 160:
+                self.rect = self.rect.move(0.5 * self.direction * self.speed, 1 * self.speed)
+            else:
+                self.rect = self.rect.move(0.5 * self.direction * self.speed, 1.5 * self.speed)
+        else:
+            self.rect = self.rect.move(0.5 * self.direction * self.speed, 1.5 * self.speed)
 
         if not (self.area.right >= self.rect.right and self.rect.left >= self.area.left):
             self.direction *= -1
@@ -247,6 +252,7 @@ class Enemy(pygame.sprite.Sprite):
             self.fire_count_down -= 1
         if self.speed == 0 and self.missile_number == 0:
             self.speed = 2
+        self.frame += 1
 
 
     def fire(self):
@@ -342,24 +348,37 @@ class Boss(pygame.sprite.Sprite):
     def fire(self):
         if self.missile_number > 0:
             return
-        if self.number_appear == 1:
+        if self.number_appear == 1 or self.number_appear == 4:
             self.firing_dir *= -1
             self.missile_number = 20
             # self.speed = 0
+        elif self.number_appear == 2 or self.number_appear == 0:
+            self.firing_dir *= -1
+            self.missile_number = 10
         else:
             self.missile_number = 1
         self._fire()
 
     def _fire(self):
-        if self.number_appear == 1:
+        if self.number_appear == 1 or self.number_appear == 4:
             vector = (self.firing_dir*math.cos(math.pi*(0.8*self.missile_number/20 + 0.1)),
                       math.sin(math.pi*(0.8*self.missile_number/20 + 0.1)))
             EnemyMissile.position(self.rect.midbottom,
                                   direction=vector)
 
             self.fire_count_down = int(0.3*FIRE_WAIT)
+        elif self.number_appear == 2 or self.number_appear == 0:
+            vector = (self.firing_dir*math.cos(math.pi*(0.8*self.missile_number/10 + 0.1)),
+                      math.sin(math.pi*(0.4*self.missile_number/10 + 0.1)))
+            EnemyMissile.position(self.rect.midbottom, 2,
+                                  direction=vector)
+            self.fire_count_down = int(0.8*FIRE_WAIT)
         else:
+            vector = (math.cos(2*math.pi*1/6), math.sin(2*math.pi*1/6))
+            vector2 = (math.cos(2*math.pi*2/6), math.sin(2*math.pi*2/6))
             EnemyMissile.position(self.rect.midbottom, 3)
+            EnemyMissile.position(self.rect.midbottom, 3, direction=vector)
+            EnemyMissile.position(self.rect.midbottom, 3, direction=vector2)
         self.missile_number -= 1
 
 
