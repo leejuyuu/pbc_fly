@@ -85,6 +85,7 @@ def main():
     score = 0
     score_font = pygame.font.SysFont('arial', 25)
 
+    start_button = sprites.Button('start.png', 'start_down.png', (240, 320))
     again_button = sprites.Button('game_again.png', 'game_again_down.png', (240, 390))
     leave_button = sprites.Button('leave_game.png', 'leave_game_down.png', (240, 480))
     gameover_image, _ = load_image('gameover.png', colorkey=-1, scale=(400, 150))
@@ -122,8 +123,10 @@ def main():
     frame = 0
 
     music.play(loops=-1)  # Looping play background music
+    start_new_game = True
     keep_playing = True
     game = 0
+    
     while keep_playing:
         game += 1
         allsprites.empty()
@@ -146,6 +149,24 @@ def main():
         boss_number_appear = 1 # the number of boss that has appeared including this one
         score = 0
         frame = 0
+        while start_new_game:
+            clock.tick(60)  # Max FPS = 60
+            # Event handling (somehow this needs to be here to make get the mouse position work)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    return
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    return
+            screen.blit(background, (0, background1_rect.y))
+            screen.blit(background, (0, background2_rect.y))
+            start_button.render(screen)
+            if start_button.pressed:
+                start_button.pressed = False
+                start_new_game = False
+                break
+            pygame.display.update()
         while True:
             frame += 1  # Loop counter
             score += 1/30

@@ -227,7 +227,7 @@ class Enemy(pygame.sprite.Sprite):
 
     def update(self):
         if not self.frame % 80:  # 讓敵人可以隨機左右移動
-            if random.randrange(2) == 0:
+            if not random.randrange(2):
                 self.direction *= -1
         self.frame += 1
         self.rect = self.rect.move(0.5 * self.direction * self.speed, 1.5 * self.speed)
@@ -484,7 +484,8 @@ class ExplosionBoss(pygame.sprite.Sprite):
 class Button(object):
     def __init__(self, image1, image2, position):
         self.imageUp, _ = main.load_image(image1, colorkey=-1)
-        self.imageDown, _ = main.load_image(image2, colorkey=-1)
+        self.imageUp, _ = main.load_image(image1, colorkey=-1, scale=(272,81))
+        self.imageDown, _ = main.load_image(image2, colorkey=-1, scale=(272,81))
         self.position = position
         self.pressed = False
 
