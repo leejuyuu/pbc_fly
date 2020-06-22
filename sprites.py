@@ -483,7 +483,6 @@ class ExplosionBoss(pygame.sprite.Sprite):
 
 class Button(object):
     def __init__(self, image1, image2, position):
-        self.imageUp, _ = main.load_image(image1, colorkey=-1)
         self.imageUp, _ = main.load_image(image1, colorkey=-1, scale=(272,81))
         self.imageDown, _ = main.load_image(image2, colorkey=-1, scale=(272,81))
         self.position = position
