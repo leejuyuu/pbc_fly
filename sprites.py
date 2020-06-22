@@ -204,7 +204,7 @@ class Enemy(pygame.sprite.Sprite):
         self.fire_count_down = 0
         self.fire_cycle = ENEMY_FIRE_PERIOD
 
-    def revival(self):
+    def revival(self): # 血量增後（等級增加）機制
         Enemy.initial_hp += 10
         self.hp = self.initial_hp
 
@@ -255,7 +255,7 @@ class Enemy(pygame.sprite.Sprite):
         self.frame += 1
 
 
-    def fire(self):
+    def fire(self): # 發射砲彈的方式
         if not self.frame % self.fire_cycle:
             if self.number_appear == 0:
                 self.missile_number = 5
@@ -314,9 +314,8 @@ class Boss(pygame.sprite.Sprite):
         self.missile_number = 0
         self.fire_count_down = 0
         self.firing_dir = 1
-
-
-    def revival(self):
+   
+    def revival(self): # 血量增厚（等級提升）機制
         Boss.initial_hp += 80
         self.hp = self.initial_hp
 
@@ -329,7 +328,7 @@ class Boss(pygame.sprite.Sprite):
         self.rect.top = self.area.top
 
 
-    def update(self):
+    def update(self): # 移動方式
         self.rect = self.rect.move(self.direction * self.speed, 0)
 
         if not (self.area.right >= self.rect.right and self.rect.left >= self.area.left):
@@ -341,11 +340,11 @@ class Boss(pygame.sprite.Sprite):
         if self.speed == 0 and self.missile_number == 0:
             self.speed = 1.5
 
-    def die(self):
+    def die(self): # 製造爆炸畫面
         ExplosionBoss.position(self.rect.center)
         self.kill()
 
-    def fire(self):
+    def fire(self): # 發射砲彈
         if self.missile_number > 0:
             return
         if self.number_appear == 1 or self.number_appear == 4:
@@ -408,7 +407,7 @@ class EnemyMissile(pygame.sprite.Sprite):
             missile.rect.centerx = int(x + location[0])
             missile.direction = direction
 
-    def recycle(self):
+    def recycle(self): # 回收到pool裡重複再利用
         self.add(self.pool)
         self.remove(self.allsprites, self.active)
 
@@ -418,7 +417,7 @@ class EnemyMissile(pygame.sprite.Sprite):
             self.recycle()
 
 
-# 死掉時的爆炸畫面
+# 小兵死掉時的爆炸畫面
 class ExplosionEnemy(pygame.sprite.Sprite):
     pool = pygame.sprite.Group()
     active = pygame.sprite.Group()
@@ -455,11 +454,11 @@ class ExplosionEnemy(pygame.sprite.Sprite):
             self.recycle()
             return
         self.remaining_time -= 1
-        self.rect = self.rect.move(0, 2 * self.speed) # 敵人移動速度
+        self.rect = self.rect.move(0, 2 * self.speed) # 小兵移動速度
         if self.remaining_time == 1:
             self.image = self.ash_image
 
-
+# Boss死掉時的爆炸畫面
 class ExplosionBoss(pygame.sprite.Sprite):
     pool = pygame.sprite.Group()
     active = pygame.sprite.Group()
@@ -495,7 +494,7 @@ class ExplosionBoss(pygame.sprite.Sprite):
             self.recycle()
             return
         self.remaining_time -= 1
-        self.rect = self.rect.move(0, 2 * self.speed) # 敵人移動速度
+        self.rect = self.rect.move(0, 2 * self.speed) # Boss移動速度
         if self.remaining_time == 1:
             self.image = self.ash_image
 
