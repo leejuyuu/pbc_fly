@@ -73,16 +73,17 @@ def main():
         print('Warning: Sound disabled')
     music = load_sound('Africa.wav')
     music.set_volume(0.05)
-    screen = pygame.display.set_mode((480, 640))
 
+    # Create pygame display window
+    screen = pygame.display.set_mode((480, 640))
     pygame.display.set_caption('pbc fly')
 
+    # Load background image
     background, _ = load_image('background1.png', scale=(480, 640))
     background1_rect = pygame.Rect(0, 0, 480, 640)
     background2_rect = pygame.Rect(0, 0, 480, 640)
 
-
-    score = 0
+    # Set the font of the score
     score_font = pygame.font.SysFont('arial', 25)
 
     start_button = sprites.Button('start.png', 'start_down.png', (240, 320))
@@ -90,13 +91,14 @@ def main():
     leave_button = sprites.Button('leave_game.png', 'leave_game_down.png', (240, 480))
     gameover_image, _ = load_image('gameover.png', colorkey=-1, scale=(400, 150))
 
+    # Create sprites
     plane = sprites.Plane()
     allsprites = pygame.sprite.RenderPlain((plane))
     # Create 10 missiles and store them in the class variable pool
     sprites.Missile.pool = pygame.sprite.Group([sprites.Missile() for _ in range(10)])
     sprites.Missile.allsprites = allsprites
-    sprites.FallingItem.allsprites = allsprites
 
+    # Create enemies
     sprites.EnemyMissile.pool = pygame.sprite.Group([sprites.EnemyMissile() for _ in range(10)])
     sprites.EnemyMissile.allsprites = allsprites
     enemies = pygame.sprite.Group()
@@ -112,61 +114,75 @@ def main():
                                           colorkey=-1,
                                           scale=(96, 102))[0] for i in range(1, 6)]
 
+    # Create falling objects
+    sprites.FallingItem.allsprites = allsprites
     hp_pack = sprites.HpPack()
     powerup = sprites.PowerUp()
+
+    # Create HP bar and let it track plane's hp attr
     hp_bar = sprites.HpBar(plane)
-    show_final_score = False
 
-    frame_record = int()
-
+    # Create the clock object
     clock = pygame.time.Clock()
-    frame = 0
 
     music.play(loops=-1)  # Looping play background music
-    start_new_game = True
+
+    # Enter starting view
+    while True:
+        clock.tick(60)  # Max FPS = 60
+        # Event handling (somehow this needs to be here to make get the mouse position work)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                return
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                pygame.quit()
+                return
+        screen.blit(background, (0, background1_rect.y))
+        screen.blit(background, (0, background2_rect.y))
+        start_button.render(screen)
+        if start_button.pressed:
+            start_button.pressed = False
+            break
+        pygame.display.update()
+
     keep_playing = True
     game = 0
-    
     while keep_playing:
         game += 1
+
+        # Re-position the plane
+        plane.place_at_bottom_center()
+
+        # Clearing the view by emptying all the groups
         allsprites.empty()
         allsprites.add(plane)
         bosses.empty()
         enemies.empty()
+        # Also empty those 'active' groups to avoid invisible missiles collide
+        # with our plane or enemies
         sprites.Missile.pool.add(sprites.Missile.active)
         sprites.Missile.active.empty()
         sprites.EnemyMissile.pool.add(sprites.EnemyMissile.active)
         sprites.EnemyMissile.active.empty()
+
+        # Reinitialize the HP and battle constant values of all class and objects
+        plane.hp = INITIAL_HP
         sprites.Enemy.initial_hp = sprites.HP_ENEMY
         sprites.Boss.initial_hp = sprites.HP_BOSS
-        plane.hp = INITIAL_HP
-        plane.place_at_bottom_center()
         fire_period = 20
         boss_fire_period = 70
 
         mark = False # to identify whether enemy adds hp after 1 boss is defeated (enemy level up)
         initial_boss_appear = True # to identify the first appearance of boss
         boss_number_appear = 1 # the number of boss that has appeared including this one
+
+        # Reinitialize loop counter and scores
         score = 0
         frame = 0
-        while start_new_game:
-            clock.tick(60)  # Max FPS = 60
-            # Event handling (somehow this needs to be here to make get the mouse position work)
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    return
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    return
-            screen.blit(background, (0, background1_rect.y))
-            screen.blit(background, (0, background2_rect.y))
-            start_button.render(screen)
-            if start_button.pressed:
-                start_button.pressed = False
-                start_new_game = False
-                break
-            pygame.display.update()
+        frame_record = 0
+
+        # Enter the main game loop
         while True:
             frame += 1  # Loop counter
             score += 1/30
@@ -180,11 +196,6 @@ def main():
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     return
-
-            background1_rect.y += SCROLLING_SPEED
-            if background2_rect.y + background1_rect.y > 640:
-                background1_rect.y = 0
-            background2_rect.bottom = background1_rect.y
 
             plane.key_pressed()
 
@@ -202,7 +213,6 @@ def main():
             if hp_pack not in allsprites and random.random() <= HP_PACK_PROB:
                 hp_pack.appear()
 
-
             # Enemy's appearnce
             if not frame % 100:
                 if len(bosses) == 0:
@@ -214,7 +224,6 @@ def main():
                         new_enemy.revival()
                         mark = False
                     new_enemy.add(allsprites, enemies)
-
 
             # Enemy fires missile
             for a_enemy in enemies:
@@ -252,7 +261,6 @@ def main():
                     plane.remove_powerup()
                     a_enemy.kill()
 
-
             # Check if enemy's missile hit our plane
             for missile in sprites.EnemyMissile.active:
                 if pygame.sprite.collide_circle(plane, missile):
@@ -269,13 +277,11 @@ def main():
                 if a_enemy.hp <= 0:
                     score += 40
 
-
             # Check if boss collide with our plane
             for a_boss in bosses:
                 if pygame.sprite.collide_circle(plane, a_boss):
                     plane.hp -= COLLIDE_HP_DROP
                     plane.remove_powerup()
-
 
             # Check if our plane's missile hit boss
             for a_boss in bosses:
@@ -291,22 +297,29 @@ def main():
                     boss_number_appear += 1
                     frame_record = frame # to record the number of frames when a boss is defeated
 
-
             # End the game if the HP goes to 0
             if plane.hp <= 0:
                 break
 
+            # Update all sprite object's positions
             allsprites.update()
+
+            # Update the score
             score_text = score_font.render('Score : %6d' % score, True, (225, 225, 225))
 
+            # Scroll the background
+            background1_rect.y += SCROLLING_SPEED
+            if background2_rect.y + background1_rect.y > 640:
+                background1_rect.y = 0
+            background2_rect.bottom = background1_rect.y
+
             # Draw Everything
-            if plane.hp > 0:
-                screen.blit(background, (0, background1_rect.y))
-                screen.blit(background, (0, background2_rect.y))
-                hp_bar.draw()
-                screen.blit(score_text, (10, 5))
-                allsprites.draw(screen)
-                pygame.display.flip()
+            screen.blit(background, (0, background1_rect.y))
+            screen.blit(background, (0, background2_rect.y))
+            hp_bar.draw()
+            screen.blit(score_text, (10, 5))
+            allsprites.draw(screen)
+            pygame.display.flip()
 
         while True:
             clock.tick(60)  # Max FPS = 60
